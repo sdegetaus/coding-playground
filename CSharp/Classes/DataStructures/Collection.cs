@@ -46,6 +46,16 @@ namespace CodingPlayground
             }
         }
 
+        public T[] ToArray()
+        {
+            var array = new T[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                array[i] = items[i];
+            }
+            return array;
+        }
+
         protected Collection<T> Clone()
         {
             var clone = this;
@@ -96,9 +106,8 @@ namespace CodingPlayground
 
         protected void Remove(T item)
         {
-            int index = IndexOf(item);
-            if (index == -1) return;
-            RemoveAt(index);
+            var result = Searching.LinearSearch(item, items);
+            if (result.found) RemoveAt(result.index);
         }
 
         protected void RemoveAt(int index)
@@ -112,18 +121,19 @@ namespace CodingPlayground
             Count--;
         }
 
-        protected bool Contains(T item) => IndexOf(item) != -1;
+        protected bool Contains(T item) => Searching.LinearSearch(item, items).found;
 
         protected int IndexOf(T item)
         {
-            for (int i = 0; i < Count; i++)
+            var result = Searching.LinearSearch(item, items);
+            if (result.found)
             {
-                if (item.Equals(items[i]))
-                {
-                    return i;
-                }
+                return result.index;
             }
-            return -1;
+            else
+            {
+                return -1;
+            }
         }
 
         protected void Clear()

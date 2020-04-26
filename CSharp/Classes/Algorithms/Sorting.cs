@@ -1,8 +1,8 @@
 namespace CodingPlayground
 {
-    public static class BubbleSort
+    public static class Sorting
     {
-        public static void Sort(int[] array)
+        public static void BubbleSort(int[] array)
         {
             var count = array.Length;
             for (int i = 0; i < count; i++)
