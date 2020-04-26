@@ -1,27 +1,37 @@
 namespace DataStructures
 {
-    public class Queue<T>
+    public class Queue<T> : Utilities.Collection<T>
     {
-        private List<T> list;
+        public Queue() : this(0) { }
 
-        public Queue()
+        public Queue(int capacity)
         {
-            list = new List<T>();
+            if (capacity < 0)
+            {
+                throw new System.ArgumentOutOfRangeException();
+            }
+
+            items = new T[capacity];
         }
 
         public void Enqueue(T item)
         {
-            list.Add(item);
+            AddToEnd(item);
         }
 
         public T Dequeue()
         {
-            return null;
+            var item = items[0];
+            ShiftLeft(0);
+            Count--;
+            return item;
         }
 
-        public void Debug()
+        public T Peek()
         {
-            list.Debug();
+            if (items.Length == 0) throw new System.NullReferenceException();
+            return items[0];
         }
+
     }
 }
