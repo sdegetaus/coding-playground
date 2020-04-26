@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace DataStructures
+namespace CodingPlayground
 {
     class Program
     {
         static void Main(string[] args)
         {
-
+            System.Console.WriteLine("Hello, world!");
         }
 
         private static void TryLinkendList()

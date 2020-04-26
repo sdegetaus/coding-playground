@@ -1,6 +1,6 @@
-using DataStructures.Utilities;
+using CodingPlayground.Utilities;
 
-namespace DataStructures
+namespace CodingPlayground
 {
     public class Stack<T> : Collection<T>
     {

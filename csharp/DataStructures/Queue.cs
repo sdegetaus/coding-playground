@@ -1,4 +1,4 @@
-namespace DataStructures
+namespace CodingPlayground
 {
     public class Queue<T> : Utilities.Collection<T>
     {
