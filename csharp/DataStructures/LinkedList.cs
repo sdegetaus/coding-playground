@@ -1,4 +1,3 @@
-using System;
 using DataStructures.Utilities;
 
 namespace DataStructures
@@ -54,7 +53,7 @@ namespace DataStructures
             {
                 if (index < 0 || index >= Length)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new System.ArgumentOutOfRangeException();
                 }
 
                 var node = head;
