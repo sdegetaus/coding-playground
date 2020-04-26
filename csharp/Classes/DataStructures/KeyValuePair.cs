@@ -1,4 +1,4 @@
-namespace CodingPlayground.Utilities
+namespace CodingPlayground
 {
     public class KeyValuePair<TKey, TValue>
     {
