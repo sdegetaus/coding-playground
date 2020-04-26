@@ -8,11 +8,6 @@ namespace DataStructures
         {
             get
             {
-                if (index == -1)
-                {
-                    return items[Count - 1];
-                }
-
                 if (index < 0 || index >= Count)
                 {
                     throw new System.ArgumentOutOfRangeException();
@@ -22,12 +17,6 @@ namespace DataStructures
 
             set
             {
-                if (index == -1)
-                {
-                    items[Count - 1] = value;
-                    return;
-                }
-
                 if (index < 0 || index >= Count)
                 {
                     throw new System.ArgumentOutOfRangeException();
@@ -63,6 +52,11 @@ namespace DataStructures
             {
                 base.Remove(items[i]);
             }
+        }
+
+        public new void Clear()
+        {
+            base.Clear();
         }
 
     }

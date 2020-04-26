@@ -3,11 +3,8 @@ namespace DataStructures.Utilities
     public abstract class Collection<T>
     {
         protected T[] items;
-
         public int Capacity { get => items.Length; }
-
         public int Count { get; protected set; }
-
         public T FirstItem
         {
             get
@@ -28,7 +25,6 @@ namespace DataStructures.Utilities
                 items[0] = value;
             }
         }
-
         public T LastItem
         {
             get
@@ -86,38 +82,47 @@ namespace DataStructures.Utilities
             }
         }
 
-        private void ShiftRight()
+        protected void ShiftRight()
         {
             throw new System.NotImplementedException();
         }
 
         protected void Remove(T item)
         {
-            bool found = false;
-            for (int i = 0; i < Count; i++)
-            {
-                if (item.Equals(items[i]))
-                {
-                    found = true;
-                    if (i == Count - 1) break;
-                    ShiftLeft(from: i);
-                    break;
-                }
-            }
-
-            if (found) Count--;
+            int index = IndexOf(item);
+            if (index == -1) return;
+            RemoveAt(index);
         }
 
-        protected bool Contains(T item)
+        protected void RemoveAt(int index)
+        {
+            if (index == Count - 1)
+            {
+                Count--;
+                return;
+            }
+            ShiftLeft(index);
+            Count--;
+        }
+
+        protected bool Contains(T item) => IndexOf(item) != -1;
+
+        protected int IndexOf(T item)
         {
             for (int i = 0; i < Count; i++)
             {
                 if (item.Equals(items[i]))
                 {
-                    return true;
+                    return i;
                 }
             }
-            return false;
+            return -1;
+        }
+
+        protected void Clear()
+        {
+            items = new T[0];
+            Count = 0;
         }
 
         public void Debug()
@@ -126,7 +131,7 @@ namespace DataStructures.Utilities
             System.Console.WriteLine("Items:");
             for (int i = 0; i < Count; i++)
             {
-                System.Console.WriteLine($"{i}: {items[i]}");
+                System.Console.WriteLine($"{i}: {items[i].ToString()}");
             }
             System.Console.WriteLine();
             System.Console.WriteLine($"Length:   {items.Length}");

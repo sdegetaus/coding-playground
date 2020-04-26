@@ -6,14 +6,7 @@ namespace DataStructures
     {
         static void Main(string[] args)
         {
-            var heap = new Heap();
-            heap.Add(10);
-            heap.Add(15);
-            heap.Add(20);
-            heap.Add(17);
-            heap.Add(25);
-            heap.Poll();
-            heap.Debug();
+
         }
 
         private static void TryLinkendList()
@@ -33,6 +26,22 @@ namespace DataStructures
             }
             list.Remove(5);
             list.Debug();
+        }
+        private static void TryDictionary()
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("txt", "notepad.exe");
+            dic.Add("bmp", "paint.exe");
+            dic.Add("dib", "paint.exe");
+            dic.Add("rtf", "wordpad.exe");
+
+            System.Console.WriteLine(dic.ContainsKey("dib"));
+            System.Console.WriteLine(dic.ContainsKey("rtf"));
+            dic["rtf"] = "hola";
+            dic.Remove("dib");
+            dic.Remove("txt");
+
+            dic.Debug();
         }
         private static void TryQueue()
         {
@@ -73,6 +82,16 @@ namespace DataStructures
             tree.Debug();
             System.Console.WriteLine(tree.root.Contains(8));
         }
-
+        private static void TryHeap()
+        {
+            var heap = new Heap();
+            heap.Add(10);
+            heap.Add(15);
+            heap.Add(20);
+            heap.Add(17);
+            heap.Add(25);
+            heap.Poll();
+            heap.Debug();
+        }
     }
 }
