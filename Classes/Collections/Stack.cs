@@ -23,14 +23,14 @@ namespace DataStructures
 
         public T Pop()
         {
-            var item = Last;
+            var item = LastItem;
             Count--;
             return item;
         }
 
         public T Peek()
         {
-            return Last;
+            return LastItem;
         }
     }
 }

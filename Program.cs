@@ -6,9 +6,24 @@ namespace DataStructures
     {
         static void Main(string[] args)
         {
-
+            var heap = new Heap();
+            heap.Add(10);
+            heap.Add(15);
+            heap.Add(20);
+            heap.Add(17);
+            heap.Add(25);
+            heap.Poll();
+            heap.Debug();
         }
 
+        private static void TryLinkendList()
+        {
+            var l = new LinkedList<int>(1, 2, 4, 8, 16, 32);
+            l.Debug();
+            l.Append(64);
+            l.Prepend(0);
+            l.Debug();
+        }
         private static void TryList()
         {
             var list = new List<int>();
@@ -19,7 +34,6 @@ namespace DataStructures
             list.Remove(5);
             list.Debug();
         }
-
         private static void TryQueue()
         {
             var queue = new Queue<int>();
@@ -28,8 +42,8 @@ namespace DataStructures
                 queue.Enqueue(i);
             }
 
-            Console.WriteLine(queue.First);
-            Console.WriteLine(queue.Last);
+            Console.WriteLine(queue.FirstItem);
+            Console.WriteLine(queue.LastItem);
 
             for (int i = 1; i <= 4; i++)
             {
@@ -37,7 +51,6 @@ namespace DataStructures
             }
             queue.Debug();
         }
-
         private static void TryStack()
         {
             var stack = new Stack<int>();
@@ -50,6 +63,15 @@ namespace DataStructures
             System.Console.WriteLine("\nTop element: " + stack.Peek());
 
             stack.Debug();
+        }
+        private static void TryBST()
+        {
+            var tree = new BinarySearchTree(100);
+            tree.root.Insert(5);
+            tree.root.Insert(15);
+            tree.root.Insert(8);
+            tree.Debug();
+            System.Console.WriteLine(tree.root.Contains(8));
         }
 
     }

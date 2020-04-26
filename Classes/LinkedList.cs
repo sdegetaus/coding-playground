@@ -1,4 +1,5 @@
 using System;
+using DataStructures.Utilities;
 
 namespace DataStructures
 {
@@ -10,13 +11,13 @@ namespace DataStructures
 
         public LinkedList(params T[] data)
         {
-            Add(data);
+            Append(data);
         }
 
         public T Head
         {
-            get => head.data;
-            set => head.data = value;
+            get => head.value;
+            set => head.value = value;
         }
 
         public T Tail
@@ -28,7 +29,7 @@ namespace DataStructures
                 {
                     node = node.next;
                 }
-                return node.data;
+                return node.value;
             }
         }
 
@@ -64,11 +65,11 @@ namespace DataStructures
                     counter++;
                 }
 
-                return node.data;
+                return node.value;
             }
         }
 
-        public void Add(params T[] data)
+        public void Append(params T[] data)
         {
             for (int i = 0; i < data.Length; i++)
             {
@@ -86,6 +87,13 @@ namespace DataStructures
                 }
                 node.next = new Node(data[i]);
             }
+        }
+
+        public void Prepend(T data)
+        {
+            var newHead = new Node(data);
+            newHead.next = head;
+            head = newHead;
         }
 
         public void RemoveAt(int index)
@@ -115,19 +123,18 @@ namespace DataStructures
             var node = head;
             while (node != null)
             {
-                System.Console.WriteLine(node.data);
+                System.Console.WriteLine(node.value);
                 node = node.next;
             }
         }
 
-        public class Node
+        public class Node : Node<T>
         {
-            public T data;
             public Node next;
 
             public Node(T data)
             {
-                this.data = data;
+                this.value = data;
                 this.next = null;
             }
         }

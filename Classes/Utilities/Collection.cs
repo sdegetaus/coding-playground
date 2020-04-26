@@ -8,9 +8,54 @@ namespace DataStructures.Utilities
 
         public int Count { get; protected set; }
 
-        public T First { get => items[0]; }
+        public T FirstItem
+        {
+            get
+            {
+                if (Count == 0)
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
+                return items[0];
+            }
 
-        public T Last { get => items[Count - 1]; }
+            protected set
+            {
+                if (Count == 0)
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
+                items[0] = value;
+            }
+        }
+
+        public T LastItem
+        {
+            get
+            {
+                if (Count == 0)
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
+                return items[Count - 1];
+            }
+
+            protected set
+            {
+                if (Count == 0)
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
+                items[Count - 1] = value;
+            }
+        }
+
+        protected void Swap(int index0, int index1)
+        {
+            T temp = items[index0];
+            items[index0] = items[index1];
+            items[index1] = temp;
+        }
 
         protected void AddToEnd(T item)
         {
