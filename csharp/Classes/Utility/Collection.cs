@@ -1,4 +1,4 @@
-namespace CodingPlayground.Utilities
+namespace CodingPlayground.Utility
 {
     public abstract class Collection<T>
     {
