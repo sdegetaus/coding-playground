@@ -1,6 +1,6 @@
 namespace CodingPlayground
 {
-    public static class Bubble
+    public static class BubbleSort
     {
         public static void Sort(int[] array)
         {
