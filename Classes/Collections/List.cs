@@ -57,21 +57,12 @@ namespace DataStructures
             }
         }
 
-        public new void Remove(T item)
+        public void Remove(params T[] items)
         {
-            base.Remove(item);
-        }
-
-        public bool Contains(T item)
-        {
-            for (int i = 0; i < Count; i++)
+            for (int i = 0; i < items.Length; i++)
             {
-                if (item.Equals(items[i]))
-                {
-                    return true;
-                }
+                base.Remove(items[i]);
             }
-            return false;
         }
 
     }

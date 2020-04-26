@@ -30,8 +30,7 @@ namespace DataStructures.Utilities
 
         protected void AddToStart(T item)
         {
-            if (Capacity == 0) this.items = new T[4];
-
+            throw new System.NotImplementedException();
         }
 
         protected void ShiftLeft(int from)
@@ -62,6 +61,18 @@ namespace DataStructures.Utilities
             }
 
             if (found) Count--;
+        }
+
+        protected bool Contains(T item)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (item.Equals(items[i]))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void Debug()

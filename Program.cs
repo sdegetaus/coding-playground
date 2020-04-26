@@ -38,5 +38,19 @@ namespace DataStructures
             queue.Debug();
         }
 
+        private static void TryStack()
+        {
+            var stack = new Stack<int>();
+            for (int i = 10; i <= 30; i += 10)
+            {
+                stack.Push(i);
+            }
+
+            stack.Pop();
+            System.Console.WriteLine("\nTop element: " + stack.Peek());
+
+            stack.Debug();
+        }
+
     }
 }
