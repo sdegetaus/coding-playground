@@ -1,6 +1,6 @@
 namespace CodingPlayground
 {
-    public class Queue<T> : Utilities.Collection<T>
+    public class Queue<T> : Collection<T>
     {
         public Queue() : this(0) { }
 

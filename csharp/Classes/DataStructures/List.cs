@@ -36,6 +36,12 @@ namespace CodingPlayground
             items = new T[capacity];
         }
 
+        public List(params T[] items)
+        {
+            this.items = items;
+            Count = items.Length;
+        }
+
         public void Add(params T[] items)
         {
             for (int i = 0; i < items.Length; i++)
@@ -55,6 +61,24 @@ namespace CodingPlayground
         public new void Clear()
         {
             base.Clear();
+        }
+
+        public void ForEach(Action<T> callback)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                callback.Invoke(items[i]);
+            }
+        }
+
+        public List<T> Map(Func<T, int, T> callback)
+        {
+            var newList = Clone() as List<T>;
+            for (int i = 0; i < Count; i++)
+            {
+                newList[i] = callback.Invoke(items[i], i);
+            }
+            return newList;
         }
 
     }

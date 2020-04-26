@@ -46,6 +46,13 @@ namespace CodingPlayground
             }
         }
 
+        protected Collection<T> Clone()
+        {
+            var clone = this;
+            clone.Count = Count;
+            return clone;
+        }
+
         protected void Swap(int index0, int index1)
         {
             T temp = items[index0];
@@ -127,17 +134,21 @@ namespace CodingPlayground
 
         public void Debug()
         {
-            System.Console.WriteLine();
-            System.Console.WriteLine("Items:");
-            for (int i = 0; i < Count; i++)
+            if (Count == 0)
             {
-                System.Console.WriteLine($"{i}: {items[i].ToString()}");
+                System.Console.WriteLine("\nCollection is empty!");
             }
-            System.Console.WriteLine();
-            System.Console.WriteLine($"Length:   {items.Length}");
+            else
+            {
+                System.Console.WriteLine("\nItems:");
+                for (int i = 0; i < Count; i++)
+                {
+                    System.Console.WriteLine($"{i}: {items[i].ToString()}");
+                }
+            }
+            System.Console.WriteLine($"\nLength:   {items.Length}");
             System.Console.WriteLine($"Capacity: {Capacity}");
-            System.Console.WriteLine($"Count:    {Count}");
-            System.Console.WriteLine();
+            System.Console.WriteLine($"Count:    {Count}\n");
         }
 
     }
