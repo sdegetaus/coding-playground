@@ -2,16 +2,9 @@ namespace CodingPlayground
 {
     public class Heap : Collection<int>
     {
-        public Heap() : this(0) { }
-        public Heap(int capacity)
-        {
-            if (capacity < 0)
-            {
-                throw new System.ArgumentOutOfRangeException();
-            }
+        public Heap() : base() { }
 
-            items = new int[capacity];
-        }
+        public Heap(int capacity) : base(capacity) { }
 
         public int Peek() => FirstItem;
 

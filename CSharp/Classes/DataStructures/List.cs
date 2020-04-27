@@ -24,23 +24,9 @@ namespace CodingPlayground
             }
         }
 
-        public List() : this(0) { }
+        public List() : base() { }
 
-        public List(int capacity)
-        {
-            if (capacity < 0)
-            {
-                throw new System.ArgumentOutOfRangeException();
-            }
-
-            items = new T[capacity];
-        }
-
-        public List(params T[] items)
-        {
-            this.items = items;
-            Count = items.Length;
-        }
+        public List(int capacity) : base(capacity) { }
 
         public void Add(params T[] items)
         {

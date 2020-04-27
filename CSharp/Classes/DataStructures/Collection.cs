@@ -46,6 +46,18 @@ namespace CodingPlayground
             }
         }
 
+        public Collection() : this(0) { }
+
+        public Collection(int capacity)
+        {
+            if (capacity < 0)
+            {
+                throw new System.ArgumentOutOfRangeException();
+            }
+
+            items = new T[capacity];
+        }
+
         public T[] ToArray()
         {
             var array = new T[Count];

@@ -25,17 +25,9 @@ namespace CodingPlayground
             }
         }
 
-        public Dictionary() : this(0) { }
+        public Dictionary() : base() { }
 
-        public Dictionary(int capacity)
-        {
-            if (capacity < 0)
-            {
-                throw new System.ArgumentOutOfRangeException();
-            }
-
-            items = new KeyValuePair<TKey, TValue>[capacity];
-        }
+        public Dictionary(int capacity) : base(capacity) { }
 
         public void Add(TKey key, TValue value)
         {

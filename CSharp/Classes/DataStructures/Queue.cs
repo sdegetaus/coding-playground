@@ -2,17 +2,9 @@ namespace CodingPlayground
 {
     public class Queue<T> : Collection<T>
     {
-        public Queue() : this(0) { }
+        public Queue() : base() { }
 
-        public Queue(int capacity)
-        {
-            if (capacity < 0)
-            {
-                throw new System.ArgumentOutOfRangeException();
-            }
-
-            items = new T[capacity];
-        }
+        public Queue(int capacity) : base(capacity) { }
 
         public void Enqueue(T item)
         {

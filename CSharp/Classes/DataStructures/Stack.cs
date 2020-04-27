@@ -2,17 +2,9 @@ namespace CodingPlayground
 {
     public class Stack<T> : Collection<T>
     {
-        public Stack() : this(0) { }
+        public Stack() : base() { }
 
-        public Stack(int capacity)
-        {
-            if (capacity < 0)
-            {
-                throw new System.ArgumentOutOfRangeException();
-            }
-
-            items = new T[capacity];
-        }
+        public Stack(int capacity) : base(capacity) { }
 
         public void Push(T item)
         {
