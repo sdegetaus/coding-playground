@@ -4,4 +4,5 @@ namespace CodingPlayground
     {
         public T value;
     }
+
 }

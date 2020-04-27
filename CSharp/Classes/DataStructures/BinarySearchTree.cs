@@ -2,14 +2,14 @@ namespace CodingPlayground
 {
     public class BinarySearchTree
     {
-        public Node root { get; private set; }
+        public BSTNode root { get; private set; }
 
         public BinarySearchTree(int value)
         {
-            root = new Node(value);
+            root = new BSTNode(value);
         }
 
-        public static void Traverse(Node node)
+        public static void Traverse(BSTNode node)
         {
             if (node.left != null)
             {
@@ -29,11 +29,11 @@ namespace CodingPlayground
             Traverse(root);
         }
 
-        public class Node : Node<int>
+        public class BSTNode : Node<int>
         {
-            public Node left, right;
+            public BSTNode left, right;
 
-            public Node(int value)
+            public BSTNode(int value)
             {
                 this.value = value;
                 left = right = null;
@@ -45,7 +45,7 @@ namespace CodingPlayground
                 {
                     if (left == null)
                     {
-                        left = new Node(value);
+                        left = new BSTNode(value);
                     }
                     else
                     {
@@ -56,7 +56,7 @@ namespace CodingPlayground
                 {
                     if (right == null)
                     {
-                        right = new Node(value);
+                        right = new BSTNode(value);
                     }
                     else
                     {
@@ -95,6 +95,7 @@ namespace CodingPlayground
 
                 }
             }
+
         }
 
     }

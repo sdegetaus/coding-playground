@@ -17,11 +17,11 @@ namespace CodingPlayground
         {
             if (found)
             {
-                return $"Value {value} found at position {index}";
+                return $"Value \"{value}\" found at position {index}";
             }
             else
             {
-                return $"Value {value} not found";
+                return $"Value \"{value}\" not found";
             }
         }
 

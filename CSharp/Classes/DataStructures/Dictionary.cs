@@ -38,7 +38,7 @@ namespace CodingPlayground
         {
             int index = IndexOf(key);
             if (index == -1) return;
-            base.RemoveAt(index);
+            base.RemoveFrom(index);
         }
 
         public new void Clear() => base.Clear();

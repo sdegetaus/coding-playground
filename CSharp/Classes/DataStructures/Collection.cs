@@ -84,23 +84,42 @@ namespace CodingPlayground
 
         protected void AddToEnd(T item)
         {
-            if (Capacity == 0) this.items = new T[4];
-            if (Count == Capacity)
-            {
-                var _items = new T[this.items.Length * 2];
-                for (int j = 0; j < this.items.Length; j++)
-                {
-                    _items[j] = this.items[j];
-                }
-                this.items = _items;
-            }
-            this.items[Count] = item;
+            ExpandIfNecessary();
+            items[Count] = item;
             Count++;
+        }
+
+        protected void AddTo(T item, int index)
+        {
+            items[index] = item;
+            if (index + 1 > Count)
+            {
+                Count = index + 1;
+            }
         }
 
         protected void AddToStart(T item)
         {
             throw new System.NotImplementedException();
+        }
+
+        protected void ExpandIfNecessary()
+        {
+            if (Capacity == 0)
+            {
+                items = new T[4];
+                return;
+            }
+
+            if (Count >= Capacity)
+            {
+                var newItems = new T[items.Length * 2];
+                for (int i = 0; i < items.Length; i++)
+                {
+                    newItems[i] = items[i];
+                }
+                items = newItems;
+            }
         }
 
         protected void ShiftLeft(int from)
@@ -119,10 +138,10 @@ namespace CodingPlayground
         protected void Remove(T item)
         {
             var result = Searching.LinearSearch(item, items);
-            if (result.found) RemoveAt(result.index);
+            if (result.found) RemoveFrom(result.index);
         }
 
-        protected void RemoveAt(int index)
+        protected void RemoveFrom(int index)
         {
             if (index == Count - 1)
             {
@@ -165,6 +184,7 @@ namespace CodingPlayground
                 System.Console.WriteLine("\nItems:");
                 for (int i = 0; i < Count; i++)
                 {
+                    if (items[i] == null) continue;
                     System.Console.WriteLine($"{i}: {items[i].ToString()}");
                 }
             }

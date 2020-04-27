@@ -2,22 +2,32 @@ namespace CodingPlayground
 {
     public class LinkedList<T>
     {
-        private Node head = null;
+        public class LinkedListNode : Node<T>
+        {
+            public LinkedListNode next;
+
+            public LinkedListNode(T data)
+            {
+                this.value = data;
+                this.next = null;
+            }
+        }
+
+        private LinkedListNode head = null;
 
         public LinkedList() { }
 
         public LinkedList(params T[] data)
         {
-            Append(data);
+            AddLast(data);
         }
 
-        public T Head
+        public LinkedListNode First
         {
-            get => head.value;
-            set => head.value = value;
+            get => head;
         }
 
-        public T Tail
+        public LinkedListNode Last
         {
             get
             {
@@ -26,11 +36,11 @@ namespace CodingPlayground
                 {
                     node = node.next;
                 }
-                return node.value;
+                return node;
             }
         }
 
-        public int Length
+        public int Count
         {
             get
             {
@@ -45,34 +55,20 @@ namespace CodingPlayground
             }
         }
 
-        public T this[int index]
+        public void AddFirst(T data)
         {
-            get
-            {
-                if (index < 0 || index >= Length)
-                {
-                    throw new System.ArgumentOutOfRangeException();
-                }
-
-                var node = head;
-                int counter = 0;
-                while (counter != index && node != null)
-                {
-                    node = node.next;
-                    counter++;
-                }
-
-                return node.value;
-            }
+            var newHead = new LinkedListNode(data);
+            newHead.next = head;
+            head = newHead;
         }
 
-        public void Append(params T[] data)
+        public void AddLast(params T[] data)
         {
             for (int i = 0; i < data.Length; i++)
             {
                 if (head == null)
                 {
-                    head = new Node(data[i]);
+                    head = new LinkedListNode(data[i]);
                     continue;
                 }
 
@@ -82,15 +78,8 @@ namespace CodingPlayground
                 {
                     node = node.next;
                 }
-                node.next = new Node(data[i]);
+                node.next = new LinkedListNode(data[i]);
             }
-        }
-
-        public void Prepend(T data)
-        {
-            var newHead = new Node(data);
-            newHead.next = head;
-            head = newHead;
         }
 
         public void RemoveAt(int index)
@@ -115,24 +104,37 @@ namespace CodingPlayground
             prev.next = node.next;
         }
 
+        // TO ADD:
+        // Contains
+        // Remove First
+        // Remove Last
+        // Clear
+        // Find
+
+        public SearchResult<T> Find(T item)
+        {
+            var node = head;
+            int count = 0;
+            while (node != null)
+            {
+                if (item.Equals(node.value))
+                {
+                    return new SearchResult<T>(node.value, count, true);
+                }
+                node = node.next;
+                count++;
+            }
+
+            return new SearchResult<T>(item, -1, false);
+        }
+
         public void Debug()
         {
             var node = head;
             while (node != null)
             {
-                System.Console.WriteLine(node.value);
+                System.Console.WriteLine(node.value.ToString());
                 node = node.next;
-            }
-        }
-
-        public class Node : Node<T>
-        {
-            public Node next;
-
-            public Node(T data)
-            {
-                this.value = data;
-                this.next = null;
             }
         }
 
