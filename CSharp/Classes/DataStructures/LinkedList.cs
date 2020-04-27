@@ -5,10 +5,9 @@ namespace CodingPlayground
         public class LinkedListNode : Node<T>
         {
             public LinkedListNode next;
-
-            public LinkedListNode(T data)
+            public LinkedListNode(T value)
             {
-                this.value = data;
+                this.value = value;
                 this.next = null;
             }
         }
@@ -22,10 +21,7 @@ namespace CodingPlayground
             AddLast(data);
         }
 
-        public LinkedListNode First
-        {
-            get => head;
-        }
+        public LinkedListNode First { get => head; }
 
         public LinkedListNode Last
         {
@@ -165,6 +161,18 @@ namespace CodingPlayground
                 }
             }
             System.Console.WriteLine($"Count: {Count}\n");
+        }
+
+        public override string ToString()
+        {
+            var node = head;
+            string result = "";
+            while (node != null)
+            {
+                result += $"{((result.Length == 0) ? "" : ", ")}({node.value.ToString()})";
+                node = node.next;
+            }
+            return result;
         }
 
     }

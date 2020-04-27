@@ -52,7 +52,7 @@ namespace CodingPlayground
         {
             if (capacity < 0)
             {
-                throw new System.ArgumentOutOfRangeException();
+                throw new System.ArgumentException("Capacity can't be less than zero");
             }
 
             items = new T[capacity];
@@ -91,11 +91,12 @@ namespace CodingPlayground
 
         protected void AddTo(T item, int index)
         {
-            items[index] = item;
-            if (index + 1 > Count)
+            if (index < 0 || index >= items.Length)
             {
-                Count = index + 1;
+                throw new System.ArgumentOutOfRangeException();
             }
+            items[index] = item;
+            Count++;
         }
 
         protected void AddToStart(T item)
@@ -173,7 +174,7 @@ namespace CodingPlayground
             Count = 0;
         }
 
-        public void Debug()
+        public virtual void Debug()
         {
             if (Count == 0)
             {

@@ -13,7 +13,7 @@ namespace CodingPlayground
 
         public override string ToString()
         {
-            return $"{key.ToString()}, {value.ToString()}";
+            return $"k: {key.ToString()}, v: {value.ToString()}";
         }
 
         public void Debug()
