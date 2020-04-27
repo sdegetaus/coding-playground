@@ -2,9 +2,10 @@ namespace CodingPlayground
 {
     public static class Sorting
     {
-        public static void BubbleSort(int[] array)
+        public static SortResult BubbleSort(int[] array)
         {
             var count = array.Length;
+            var iterations = 0;
             for (int i = 0; i < count; i++)
             {
                 for (int j = 0; j < count - 1 - i; j++)
@@ -15,8 +16,11 @@ namespace CodingPlayground
                         array[j] = array[j + 1];
                         array[j + 1] = temp;
                     }
+                    iterations++;
                 }
+                iterations++;
             }
+            return new SortResult(iterations);
         }
 
     }
