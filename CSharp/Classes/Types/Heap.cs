@@ -6,6 +6,8 @@ namespace CodingPlayground
 
         public Heap(int capacity) : base(capacity) { }
 
+        public Heap(params int[] items) : base(items) { }
+
         public int Peek() => FirstItem;
 
         public int Poll()

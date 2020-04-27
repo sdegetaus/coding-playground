@@ -61,6 +61,10 @@ namespace CodingPlayground
         public Collection(params T[] items)
         {
             this.items = new T[items.Length];
+            for (int i = 0; i < Capacity; i++)
+            {
+                AddToEnd(items[i]);
+            }
         }
 
         public T[] ToArray()

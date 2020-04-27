@@ -29,6 +29,8 @@ namespace CodingPlayground
 
         public Dictionary(int capacity) : base(capacity) { }
 
+        public Dictionary(params KeyValuePair<TKey, TValue>[] items) : base(items) { }
+
         public void Add(TKey key, TValue value)
         {
             AddToEnd(new KeyValuePair<TKey, TValue>(key, value));

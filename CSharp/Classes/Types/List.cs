@@ -28,6 +28,8 @@ namespace CodingPlayground
 
         public List(int capacity) : base(capacity) { }
 
+        public List(params T[] items) : base(items) { }
+
         public void Add(params T[] items)
         {
             for (int i = 0; i < items.Length; i++)

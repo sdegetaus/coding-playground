@@ -6,6 +6,8 @@ namespace CodingPlayground
 
         public Queue(int capacity) : base(capacity) { }
 
+        public Queue(params T[] items) : base(items) { }
+
         public void Enqueue(T item)
         {
             AddToEnd(item);

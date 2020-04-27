@@ -6,6 +6,8 @@ namespace CodingPlayground
 
         public Stack(int capacity) : base(capacity) { }
 
+        public Stack(params T[] items) : base(items) { }
+
         public void Push(T item)
         {
             AddToEnd(item);
