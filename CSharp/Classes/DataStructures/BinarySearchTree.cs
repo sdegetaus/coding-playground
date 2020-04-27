@@ -1,6 +1,6 @@
 namespace CodingPlayground
 {
-    public class BinarySearchTree
+    public class BinarySearchTree : IDebug
     {
         public BSTNode root { get; private set; }
 
@@ -24,10 +24,6 @@ namespace CodingPlayground
             }
         }
 
-        public void Debug()
-        {
-            Traverse(root);
-        }
 
         public class BSTNode : Node<int>
         {
@@ -96,6 +92,11 @@ namespace CodingPlayground
                 }
             }
 
+        }
+
+        public void Debug()
+        {
+            Traverse(root);
         }
 
     }

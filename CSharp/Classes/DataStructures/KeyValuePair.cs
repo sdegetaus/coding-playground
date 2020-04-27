@@ -1,6 +1,6 @@
 namespace CodingPlayground
 {
-    public class KeyValuePair<TKey, TValue>
+    public class KeyValuePair<TKey, TValue> : IDebug
     {
         public TKey key;
         public TValue value;
@@ -15,6 +15,11 @@ namespace CodingPlayground
         {
             return $"{key.ToString()}, {value.ToString()}";
         }
-    }
 
+        public void Debug()
+        {
+            System.Console.WriteLine(this.ToString());
+        }
+
+    }
 }

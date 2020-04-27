@@ -1,6 +1,6 @@
 namespace CodingPlayground
 {
-    public class LinkedList<T>
+    public class LinkedList<T> : IDebug
     {
         public class LinkedListNode : Node<T>
         {
@@ -45,6 +45,12 @@ namespace CodingPlayground
             get
             {
                 var node = head;
+
+                if (head == null)
+                {
+                    return 0;
+                }
+
                 int counter = head == null ? 0 : 1;
                 while (node.next != null)
                 {
@@ -55,11 +61,14 @@ namespace CodingPlayground
             }
         }
 
-        public void AddFirst(T data)
+        public void AddFirst(params T[] data)
         {
-            var newHead = new LinkedListNode(data);
-            newHead.next = head;
-            head = newHead;
+            for (int i = 0; i < data.Length; i++)
+            {
+                var newHead = new LinkedListNode(data[i]);
+                newHead.next = head;
+                head = newHead;
+            }
         }
 
         public void AddLast(params T[] data)
@@ -82,34 +91,43 @@ namespace CodingPlayground
             }
         }
 
-        public void RemoveAt(int index)
+        public void RemoveFirst()
         {
-            if (index == 0)
+            if (head == null || head.next == null)
+            {
+                Clear();
+            }
+            else
             {
                 head = head.next;
+            }
+        }
+
+        public void RemoveLast()
+        {
+            if (head == null || head.next == null)
+            {
+                Clear();
                 return;
             }
 
             var node = head;
-            var prev = head;
-
-            int counter = 0;
-
-            while (counter != index && node != null)
+            while (node.next != null)
             {
-                prev = node;
-                node = node.next;
-                counter++;
+                if (node.next.next == null)
+                {
+                    node.next = null;
+                }
+                else
+                {
+                    node = node.next;
+                }
             }
-            prev.next = node.next;
         }
 
-        // TO ADD:
-        // Contains
-        // Remove First
-        // Remove Last
-        // Clear
-        // Find
+        public void Clear() => head = null;
+
+        public bool Contains(T item) => Find(item).found;
 
         public SearchResult<T> Find(T item)
         {
@@ -130,12 +148,23 @@ namespace CodingPlayground
 
         public void Debug()
         {
-            var node = head;
-            while (node != null)
+            if (Count == 0)
             {
-                System.Console.WriteLine(node.value.ToString());
-                node = node.next;
+                System.Console.WriteLine("\nCollection is empty!");
             }
+            else
+            {
+                System.Console.WriteLine("\nItems:");
+                var node = head;
+                var counter = 0;
+                while (node != null)
+                {
+                    System.Console.WriteLine($"{counter}: {node.value.ToString()}");
+                    node = node.next;
+                    counter++;
+                }
+            }
+            System.Console.WriteLine($"Count: {Count}\n");
         }
 
     }

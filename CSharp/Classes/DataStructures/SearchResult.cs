@@ -1,6 +1,6 @@
 namespace CodingPlayground
 {
-    public struct SearchResult<T>
+    public struct SearchResult<T> : IDebug
     {
         public T value;
         public int index;
@@ -23,6 +23,11 @@ namespace CodingPlayground
             {
                 return $"Value \"{value}\" not found";
             }
+        }
+
+        public void Debug()
+        {
+            System.Console.WriteLine(this.ToString());
         }
 
     }

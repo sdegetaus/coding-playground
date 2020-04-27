@@ -1,6 +1,6 @@
 namespace CodingPlayground
 {
-    public abstract class Collection<T>
+    public abstract class Collection<T> : IDebug
     {
         protected T[] items;
         public int Capacity { get => items.Length; }
