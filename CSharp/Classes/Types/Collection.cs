@@ -58,6 +58,11 @@ namespace CodingPlayground
             items = new T[capacity];
         }
 
+        public Collection(params T[] items)
+        {
+            this.items = new T[items.Length];
+        }
+
         public T[] ToArray()
         {
             var array = new T[Count];
