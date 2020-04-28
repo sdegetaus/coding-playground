@@ -3,17 +3,17 @@ namespace CodingPlayground
     public struct SortResult<T>
     {
         ///<summary>
-        /// Sorting technique name
+        /// Sorting technique name.
         ///</summary>
         public string name;
 
         ///<summary>
-        /// Iterations taken to complete sort
+        /// Iterations taken to complete sort.
         ///</summary>
         public int iterations;
 
         ///<summary>
-        /// Sorted array
+        /// Sorted array.
         ///</summary>
         public T[] result;
 
