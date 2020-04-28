@@ -4,13 +4,7 @@
     {
         static void Main(string[] args)
         {
-            List<int> list = new List<int>(50);
-            for (int i = 0; i < 117; i++)
-            {
-                list.Add(i);
-            }
-            list.Reverse();
-            System.Console.WriteLine(list.ToString());
+
         }
 
         #region Sorting
