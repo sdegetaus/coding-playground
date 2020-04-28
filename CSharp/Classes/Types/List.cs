@@ -51,6 +51,36 @@ namespace CodingPlayground
             base.Clear();
         }
 
+        public void TrimExcess()
+        {
+            var newItems = new T[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                newItems[i] = items[i];
+            }
+            items = newItems;
+        }
+
+        public void Reverse()
+        {
+            var newItems = new T[Count];
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                newItems[Count - 1 - i] = items[i];
+            }
+            items = newItems;
+        }
+
+        public override string ToString()
+        {
+            string result = string.Empty;
+            for (int i = 0; i < Count; i++)
+            {
+                result += items[i].ToString() + (i != Count - 1 ? " " : "");
+            }
+            return result;
+        }
+
         public void ForEach(Action<T> callback)
         {
             for (int i = 0; i < Count; i++)
