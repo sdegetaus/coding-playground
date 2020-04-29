@@ -74,10 +74,7 @@ namespace CodingPlayground
 
         public void Desaturate()
         {
-            pixelArray.Map((color, index) =>
-            {
-                return new Color((byte)(color.r + color.b + color.g) / 0x03);
-            });
+            pixelArray.Map((color, index) => color.desaturate);
         }
 
         public void RemoveChannel(ColorChannel channel)

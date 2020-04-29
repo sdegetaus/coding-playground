@@ -92,8 +92,6 @@ namespace CodingPlayground
             return newColor;
         }
 
-
-
         public Color With(byte? r = null, byte? g = null, byte? b = null, byte? a = null) =>
             new Color(r ?? this.r, g ?? this.g, b ?? this.b, a ?? this.a);
 
@@ -116,13 +114,6 @@ namespace CodingPlayground
         #endregion
 
         #region Operators
-
-        private static byte Sanitize(byte value)
-        {
-            if (value > 0xFF) return 0xFF;
-            if (value < 0x00) return 0x00;
-            return value;
-        }
 
         private static int Sanitize(int value)
         {
@@ -148,6 +139,7 @@ namespace CodingPlayground
         }
 
         public static Color operator *(Color color, float factor) => factor * color;
+
         public static Color operator *(float factor, Color color)
         {
             var r = Sanitize((int)(factor * color.r));
@@ -159,6 +151,11 @@ namespace CodingPlayground
         #endregion
 
         #region Standard Values
+
+        public Color desaturate
+        {
+            get => new Color((byte)(r + b + g) / 0x03);
+        }
 
         public static Color white
         {
