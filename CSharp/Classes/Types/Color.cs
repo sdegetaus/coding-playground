@@ -2,6 +2,8 @@ namespace CodingPlayground
 {
     public struct Color
     {
+        #region Properties
+
         public byte r;
 
         public byte g;
@@ -9,6 +11,8 @@ namespace CodingPlayground
         public byte b;
 
         public byte a;
+
+        #endregion
 
         #region Constructors
 
@@ -63,6 +67,8 @@ namespace CodingPlayground
 
         #endregion
 
+        #region Public Methods
+
         public Color Invert() => new Color((byte)~r, (byte)~g, (byte)~b);
 
         public Color RemoveChannel(ColorChannel channel)
@@ -101,6 +107,8 @@ namespace CodingPlayground
         public byte[] ToBGR() => new byte[] { this.b, this.g, this.r };
 
         public override string ToString() => $"R: {r}, G: {g}, B: {b}";
+
+        #endregion
 
         #region Static Methods
 
@@ -150,7 +158,7 @@ namespace CodingPlayground
 
         #endregion
 
-        #region Standard Values
+        #region Static Properties
 
         public Color desaturate
         {
