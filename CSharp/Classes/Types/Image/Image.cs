@@ -36,6 +36,16 @@ namespace CodingPlayground
 
         public abstract void Save(string savePath);
 
+        public Color GetPixel(int x, int y)
+        {
+            return pixelArray.GetPixel(y * height + x);
+        }
+
+        public void SetPixel(int x, int y, Color color)
+        {
+            pixelArray.SetPixel(y * height + x, color);
+        }
+
         public void Fill(Color color)
         {
             for (int y = 0; y < height; y++)
