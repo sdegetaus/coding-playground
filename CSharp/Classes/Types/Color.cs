@@ -8,11 +8,22 @@ namespace CodingPlayground
 
         public byte b;
 
+        public byte a;
+
         public Color(byte r, byte g, byte b)
         {
             this.r = r;
             this.g = g;
             this.b = b;
+            this.a = 0xFF;
+        }
+
+        public Color(byte r, byte g, byte b, byte a)
+        {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
         }
 
         public Color(int r, int g, int b)
@@ -20,12 +31,73 @@ namespace CodingPlayground
             this.r = (byte)r;
             this.g = (byte)g;
             this.b = (byte)b;
+            this.a = 0xFF;
+
         }
 
-        public override string ToString()
+        public Color(int r, int g, int b, int a)
         {
-            return $"R: {r}, G: {g}, B: {b}";
+            this.r = (byte)r;
+            this.g = (byte)g;
+            this.b = (byte)b;
+            this.a = (byte)a;
         }
+
+        public Color(byte fill)
+        {
+            this.r = fill;
+            this.g = fill;
+            this.b = fill;
+            this.a = 0xFF;
+        }
+
+        public Color(int fill)
+        {
+            this.r = (byte)fill;
+            this.g = (byte)fill;
+            this.b = (byte)fill;
+            this.a = 0xFF;
+        }
+
+        public Color Invert() => new Color((byte)~r, (byte)~g, (byte)~b);
+
+        public Color RemoveChannel(ColorChannel channel)
+        {
+            var newColor = this;
+
+            if (channel.HasFlag(ColorChannel.Red))
+            {
+                newColor = newColor.With(r: 0x00);
+            }
+
+            if (channel.HasFlag(ColorChannel.Green))
+            {
+                newColor = newColor.With(g: 0x00);
+            }
+
+            if (channel.HasFlag(ColorChannel.Blue))
+            {
+                newColor = newColor.With(b: 0x00);
+            }
+
+            if (channel.HasFlag(ColorChannel.Alpha))
+            {
+                newColor = newColor.With(a: 0x00);
+            }
+
+            return newColor;
+        }
+
+        public Color With(byte? r = null, byte? g = null, byte? b = null, byte? a = null) =>
+            new Color(r ?? this.r, g ?? this.g, b ?? this.b, a ?? this.a);
+
+
+        public Color With(int? r = null, int? g = null, int? b = null, int? a = null) =>
+            new Color(r ?? this.r, g ?? this.g, b ?? this.b, a ?? this.a);
+
+        public byte[] ToBGR() => new byte[] { this.b, this.g, this.r };
+
+        public override string ToString() => $"R: {r}, G: {g}, B: {b}";
 
         public static Color white
         {
@@ -42,12 +114,12 @@ namespace CodingPlayground
             get => new Color(0xFF, 0x00, 0x00);
         }
 
-        public static Color blue
+        public static Color green
         {
             get => new Color(0x00, 0xFF, 0x00);
         }
 
-        public static Color green
+        public static Color blue
         {
             get => new Color(0x00, 0x00, 0xFF);
         }
@@ -62,5 +134,6 @@ namespace CodingPlayground
                 return new Color(color[0], color[1], color[2]);
             }
         }
+
     }
 }
