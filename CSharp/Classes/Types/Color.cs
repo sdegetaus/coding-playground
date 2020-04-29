@@ -4,15 +4,15 @@ namespace CodingPlayground
     {
         #region Properties
 
-        public byte r;
+        public int r;
 
-        public byte g;
+        public int g;
 
-        public byte b;
+        public int b;
 
-        public byte a;
+        public int a;
 
-        public byte this[int index]
+        public int this[int index]
         {
             get
             {
@@ -70,19 +70,19 @@ namespace CodingPlayground
 
         public Color(int r, int g, int b)
         {
-            this.r = (byte)r;
-            this.g = (byte)g;
-            this.b = (byte)b;
+            this.r = r;
+            this.g = g;
+            this.b = b;
             this.a = 0xFF;
 
         }
 
         public Color(int r, int g, int b, int a)
         {
-            this.r = (byte)r;
-            this.g = (byte)g;
-            this.b = (byte)b;
-            this.a = (byte)a;
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
         }
 
         public Color(byte fill)
@@ -95,9 +95,9 @@ namespace CodingPlayground
 
         public Color(int fill)
         {
-            this.r = (byte)fill;
-            this.g = (byte)fill;
-            this.b = (byte)fill;
+            this.r = fill;
+            this.g = fill;
+            this.b = fill;
             this.a = 0xFF;
         }
 
@@ -140,7 +140,7 @@ namespace CodingPlayground
         public Color With(int? r = null, int? g = null, int? b = null, int? a = null) =>
             new Color(r ?? this.r, g ?? this.g, b ?? this.b, a ?? this.a);
 
-        public byte[] ToBGR() => new byte[] { this.b, this.g, this.r };
+        public byte[] ToBGR() => new byte[] { (byte)this.b, (byte)this.g, (byte)this.r };
 
         public override string ToString() => $"R: {r}, G: {g}, B: {b}";
 
@@ -159,26 +159,19 @@ namespace CodingPlayground
 
         #region Operators
 
-        private static int Sanitize(int value)
-        {
-            if (value > 0xFF) return 0xFF;
-            if (value < 0x00) return 0x00;
-            return value;
-        }
-
         public static Color operator +(Color color1, Color color2)
         {
-            var r = Sanitize(color1.r + color2.r);
-            var g = Sanitize(color1.g + color2.g);
-            var b = Sanitize(color1.b + color2.b);
+            int r = (int)(color1.r + color2.r);
+            int g = (int)(color1.g + color2.g);
+            int b = (int)(color1.b + color2.b);
             return new Color(r, g, b);
         }
 
         public static Color operator -(Color color1, Color color2)
         {
-            var r = Sanitize(color1.r - color2.r);
-            var g = Sanitize(color1.g - color2.g);
-            var b = Sanitize(color1.b - color2.b);
+            int r = (int)(color1.r - color2.r);
+            int g = (int)(color1.g - color2.g);
+            int b = (int)(color1.b - color2.b);
             return new Color(r, g, b);
         }
 
@@ -186,9 +179,9 @@ namespace CodingPlayground
 
         public static Color operator *(float factor, Color color)
         {
-            var r = Sanitize((int)(factor * color.r));
-            var g = Sanitize((int)(factor * color.g));
-            var b = Sanitize((int)(factor * color.b));
+            int r = (int)(color.r * factor);
+            int g = (int)(color.g * factor);
+            int b = (int)(color.b * factor);
             return new Color(r, g, b);
         }
 
