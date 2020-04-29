@@ -32,32 +32,6 @@ namespace CodingPlayground
             headerData.Add(new byte[] { 0x00, 0x00, 0x00, 0x00 });      // 32
         }
 
-        // temporal
-        public void FillContent(bool random)
-        {
-            var alternate = true;
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    if (random)
-                    {
-                        pixelArray.Add(Color.random);
-                    }
-                    else
-                    {
-                        pixelArray.Add(alternate ? Color.black : Color.white);
-                        alternate = !alternate;
-                    }
-                }
-
-                if (!random && width % 2 == 0)
-                {
-                    alternate = !alternate;
-                }
-            }
-        }
-
         public override void Save(string savePath)
         {
             if (!System.IO.File.Exists(savePath))
