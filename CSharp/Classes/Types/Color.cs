@@ -67,7 +67,7 @@ namespace CodingPlayground
 
         #endregion
 
-        #region Public Methods
+        #region Methods
 
         public Color Invert() => new Color((byte)~r, (byte)~g, (byte)~b);
 

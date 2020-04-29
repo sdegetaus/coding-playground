@@ -11,11 +11,17 @@ namespace CodingPlayground
 
     public abstract class Image
     {
+        #region Properties
+
         public int width;
 
         public int height;
 
         protected PixelArray pixelArray;
+
+        #endregion
+
+        #region Constructors
 
         public Image(int width, int height)
         {
@@ -23,6 +29,10 @@ namespace CodingPlayground
             this.height = height;
             pixelArray = new PixelArray(width, height);
         }
+
+        #endregion
+
+        #region Methods
 
         public abstract void Save(string savePath);
 
@@ -84,6 +94,8 @@ namespace CodingPlayground
                 return color.RemoveChannel(channel);
             });
         }
+
+        #endregion
 
     }
 }

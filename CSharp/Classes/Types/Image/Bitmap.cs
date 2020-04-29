@@ -5,12 +5,22 @@ namespace CodingPlayground
 {
     public class Bitmap : Image
     {
+        #region Properties
+
         private List<byte> headerData = new List<byte>();
+
+        #endregion
+
+        #region Constructors
 
         public Bitmap(int width, int height) : base(width, height)
         {
             FillHeader();
         }
+
+        #endregion
+
+        #region Methods
 
         private void FillHeader()
         {
@@ -66,5 +76,8 @@ namespace CodingPlayground
             }
 
         }
+
+        #endregion
+
     }
 }
