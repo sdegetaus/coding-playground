@@ -102,6 +102,28 @@ namespace CodingPlayground
 
         public override string ToString() => $"R: {r}, G: {g}, B: {b}";
 
+        #region Operators
+
+        public static Color operator +(Color color1, Color color2)
+        {
+            var r = color1.r + color2.r > 0xFF ? 255 : color1.r + color2.r;
+            var g = color1.g + color2.g > 0xFF ? 255 : color1.g + color2.g;
+            var b = color1.b + color2.b > 0xFF ? 255 : color1.b + color2.b;
+            return new Color(r, g, b);
+        }
+
+        public static Color operator -(Color color1, Color color2)
+        {
+            var r = color1.r - color2.r < 0x00 ? 0 : color1.r - color2.r;
+            var g = color1.g - color2.g < 0x00 ? 0 : color1.g - color2.g;
+            var b = color1.b - color2.b < 0x00 ? 0 : color1.b - color2.b;
+            return new Color(r, g, b);
+        }
+
+        #endregion
+
+        #region Standard Values
+
         public static Color white
         {
             get => new Color(0xFF, 0xFF, 0xFF);
@@ -152,6 +174,8 @@ namespace CodingPlayground
                 return new Color(color[0], color[1], color[2]);
             }
         }
+
+        #endregion
 
     }
 }
