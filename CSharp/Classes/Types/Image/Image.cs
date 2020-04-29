@@ -82,6 +82,21 @@ namespace CodingPlayground
             }
         }
 
+        public void Gradient(Color from, Color to)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var perc = (float)y / (float)height;
+                    var c = Color.Lerp(from, to, perc);
+                    System.Console.WriteLine(c);
+                    System.Console.WriteLine(perc);
+                    pixelArray.Add(c);
+                }
+            }
+        }
+
         public void Invert()
         {
             pixelArray.Map((color, index) => color.Invert());
