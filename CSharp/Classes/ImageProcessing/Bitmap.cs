@@ -14,11 +14,6 @@ namespace CodingPlayground.ImageProcessing
 
         private List<byte> pixelData = new List<byte>();
 
-        // Private Variables
-        // private int sizeHeader;
-
-        // private int bitDepth = 24;
-
         public Bitmap(int width, int height)
         {
             this.width = width;
@@ -60,15 +55,10 @@ namespace CodingPlayground.ImageProcessing
             headerData.Add(new byte[] { 0x00, 0x00, 0x00, 0x00 });
             // 32
             headerData.Add(new byte[] { 0x00, 0x00, 0x00, 0x00 });
-
-            // headerData.ForEach(x => System.Console.WriteLine(x));
         }
 
         public void FillContent(bool random)
         {
-            byte[] whitePixel = { 0xFF, 0xFF, 0xFF };
-            byte[] blackPixel = { 0x00, 0x00, 0x00 };
-
             var padding = new byte[width % 4];
             var alternate = true;
 
@@ -80,22 +70,24 @@ namespace CodingPlayground.ImageProcessing
                 {
                     if (random)
                     {
-                        var randomPixel = new byte[] { 0x00, 0x00, 0x00 };
-                        rand.NextBytes(randomPixel);
-                        pixelData.Add(randomPixel);
+                        pixelData.Add(Color.random.ToBGR());
                     }
                     else
                     {
-                        pixelData.Add(alternate ? blackPixel : whitePixel);
+                        pixelData.Add(alternate ? Color.black.ToBGR() : Color.white.ToBGR());
                         alternate = !alternate;
                     }
                 }
 
                 if (!random && width % 2 == 0)
+                {
                     alternate = !alternate;
+                }
 
                 for (int i = 0; i < padding.Length; i++)
+                {
                     padding[i] = 0x00;
+                }
 
                 pixelData.Add(padding);
             }
@@ -103,6 +95,7 @@ namespace CodingPlayground.ImageProcessing
 
         public void Invert()
         {
+            // negate all bytes
             pixelData = pixelData.Map((val, index) => (byte)~val);
         }
 
