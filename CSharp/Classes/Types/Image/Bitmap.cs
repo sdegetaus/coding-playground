@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 
 namespace CodingPlayground
@@ -13,10 +12,7 @@ namespace CodingPlayground
 
         #region Constructors
 
-        public Bitmap(int width, int height) : base(width, height)
-        {
-            FillHeader();
-        }
+        public Bitmap(int width, int height) : base(width, height) { }
 
         #endregion
 
@@ -30,8 +26,8 @@ namespace CodingPlayground
             headerData.Add(new byte[] { 0x00, 0x00 });                  // 08
             headerData.Add(new byte[] { 0x36, 0x00, 0x00, 0x00 });      // 0A
             headerData.Add(new byte[] { 0x28, 0x00, 0x00, 0x00 });      // 0E
-            headerData.Add(BitConverter.GetBytes(width));               // 12
-            headerData.Add(BitConverter.GetBytes(height));              // 16
+            headerData.Add(System.BitConverter.GetBytes(width));        // 12
+            headerData.Add(System.BitConverter.GetBytes(height));       // 16
             headerData.Add(new byte[] { 0x01, 0x00 });                  // 1A
             headerData.Add(new byte[] { 0x18, 0x00 });                  // 1C
             headerData.Add(new byte[] { 0x00, 0x00, 0x00, 0x00 });      // 1E
@@ -45,13 +41,19 @@ namespace CodingPlayground
         public override void Save(string savePath)
         {
             if (!System.IO.File.Exists(savePath))
+            {
                 System.IO.File.Create(savePath);
+            }
             else
+            {
                 System.IO.File.Delete(savePath);
+            }
 
             using (var s = System.IO.File.OpenWrite(savePath))
             {
                 var bw = new System.IO.BinaryWriter(s);
+
+                FillHeader();
                 headerData.ForEach(bytes => bw.Write(bytes));
 
                 var padding = new byte[width % 4];

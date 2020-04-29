@@ -82,16 +82,16 @@ namespace CodingPlayground
             }
         }
 
-        public void Gradient(Color from, Color to)
+        public void LinearGradient(Color from, Color to)
         {
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    var perc = (float)y / (float)height;
+                    var perc = (float)y / (float)height; // vertical
+                    // var perc = (float)x / (float)height; // horizontal
+
                     var c = Color.Lerp(from, to, perc);
-                    System.Console.WriteLine(c);
-                    System.Console.WriteLine(perc);
                     pixelArray.Add(c);
                 }
             }
@@ -100,6 +100,31 @@ namespace CodingPlayground
         public void Invert()
         {
             pixelArray.Map((color, index) => color.Invert());
+        }
+
+        public void Scale(int newWidth, int newHeight)
+        {
+            float xScale = (float)newWidth / (float)(width - 1);
+            float yScale = (float)newHeight / (float)(height - 1);
+
+            var newPixelArray = new PixelArray(newWidth, newHeight);
+
+            for (int y = 0; y < newHeight; y++)
+            {
+                for (int x = 0; x < newWidth; x++)
+                {
+                    var color = GetPixel(
+                        (int)(1 + x / xScale),
+                        (int)(1 + y / yScale)
+                    );
+                    newPixelArray.Add(color);
+                }
+            }
+
+            width = newWidth;
+            height = newHeight;
+
+            pixelArray = newPixelArray;
         }
 
         public void Saturate(float amount)
