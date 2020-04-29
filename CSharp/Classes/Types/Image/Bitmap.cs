@@ -32,6 +32,7 @@ namespace CodingPlayground
             headerData.Add(new byte[] { 0x00, 0x00, 0x00, 0x00 });      // 32
         }
 
+        // temporal
         public void FillContent(bool random)
         {
             var alternate = true;
@@ -76,7 +77,6 @@ namespace CodingPlayground
                 {
                     for (int x = 0; x < width; x++)
                     {
-                        System.Console.WriteLine(string.Join(", ", pixelArray[counter].ToBGR()));
                         bw.Write(pixelArray[counter].ToBGR());
                         counter++;
                     }

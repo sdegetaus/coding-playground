@@ -10,6 +10,8 @@ namespace CodingPlayground
 
         public byte a;
 
+        #region Constructors
+
         public Color(byte r, byte g, byte b)
         {
             this.r = r;
@@ -59,6 +61,8 @@ namespace CodingPlayground
             this.a = 0xFF;
         }
 
+        #endregion
+
         public Color Invert() => new Color((byte)~r, (byte)~g, (byte)~b);
 
         public Color RemoveChannel(ColorChannel channel)
@@ -91,7 +95,6 @@ namespace CodingPlayground
         public Color With(byte? r = null, byte? g = null, byte? b = null, byte? a = null) =>
             new Color(r ?? this.r, g ?? this.g, b ?? this.b, a ?? this.a);
 
-
         public Color With(int? r = null, int? g = null, int? b = null, int? a = null) =>
             new Color(r ?? this.r, g ?? this.g, b ?? this.b, a ?? this.a);
 
@@ -122,6 +125,21 @@ namespace CodingPlayground
         public static Color blue
         {
             get => new Color(0x00, 0x00, 0xFF);
+        }
+
+        public static Color yellow
+        {
+            get => new Color(0xFF, 0xFF, 0x00);
+        }
+
+        public static Color magenta
+        {
+            get => new Color(0xFF, 0x00, 0xFF);
+        }
+
+        public static Color cyan
+        {
+            get => new Color(0x00, 0xFF, 0xFF);
         }
 
         public static Color random
