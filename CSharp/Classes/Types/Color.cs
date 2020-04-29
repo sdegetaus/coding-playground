@@ -92,6 +92,8 @@ namespace CodingPlayground
             return newColor;
         }
 
+
+
         public Color With(byte? r = null, byte? g = null, byte? b = null, byte? a = null) =>
             new Color(r ?? this.r, g ?? this.g, b ?? this.b, a ?? this.a);
 
@@ -102,21 +104,55 @@ namespace CodingPlayground
 
         public override string ToString() => $"R: {r}, G: {g}, B: {b}";
 
+        #region Static Methods
+
+        public static Color Lerp(Color start, Color end, float percent)
+        {
+            if (percent == 0f) return start;
+            if (percent == 1f) return end;
+            return start + percent * (end - start);
+        }
+
+        #endregion
+
         #region Operators
+
+        private static byte Sanitize(byte value)
+        {
+            if (value > 0xFF) return 0xFF;
+            if (value < 0x00) return 0x00;
+            return value;
+        }
+
+        private static int Sanitize(int value)
+        {
+            if (value > 0xFF) return 0xFF;
+            if (value < 0x00) return 0x00;
+            return value;
+        }
 
         public static Color operator +(Color color1, Color color2)
         {
-            var r = color1.r + color2.r > 0xFF ? 255 : color1.r + color2.r;
-            var g = color1.g + color2.g > 0xFF ? 255 : color1.g + color2.g;
-            var b = color1.b + color2.b > 0xFF ? 255 : color1.b + color2.b;
+            var r = Sanitize(color1.r + color2.r);
+            var g = Sanitize(color1.g + color2.g);
+            var b = Sanitize(color1.b + color2.b);
             return new Color(r, g, b);
         }
 
         public static Color operator -(Color color1, Color color2)
         {
-            var r = color1.r - color2.r < 0x00 ? 0 : color1.r - color2.r;
-            var g = color1.g - color2.g < 0x00 ? 0 : color1.g - color2.g;
-            var b = color1.b - color2.b < 0x00 ? 0 : color1.b - color2.b;
+            var r = Sanitize(color1.r - color2.r);
+            var g = Sanitize(color1.g - color2.g);
+            var b = Sanitize(color1.b - color2.b);
+            return new Color(r, g, b);
+        }
+
+        public static Color operator *(Color color, float factor) => factor * color;
+        public static Color operator *(float factor, Color color)
+        {
+            var r = Sanitize((int)(factor * color.r));
+            var g = Sanitize((int)(factor * color.g));
+            var b = Sanitize((int)(factor * color.b));
             return new Color(r, g, b);
         }
 
