@@ -117,11 +117,11 @@ namespace CodingPlayground
                 for (int x = 0; x < width; x++)
                 {
                     var perc = (float)y / (float)height;    // vertical
+
                     // var perc = (float)x / (float)height; // horizontal
+
                     // var perc = (float)-(x + 1f) / (float)(width) *
                     //            (float)(y + 1f) / (float)(height); // horizontal
-                    // System.Console.WriteLine(perc);
-                    // float perc = 0.5f;
 
                     var c = Color.Lerp(from, to, perc);
                     pixelArray.Add(c);
@@ -195,8 +195,10 @@ namespace CodingPlayground
             });
         }
 
-        public void DrawRectangle(int x, int y, int w, int h, Color color)
+        public void DrawRectangle(int x, int y, int w, int h, Gradient gradient)
         {
+            HandleEmptyImage();
+
             for (int _y = 0; _y < h; _y++)
             {
                 for (int _x = 0; _x < w; _x++)
@@ -208,13 +210,20 @@ namespace CodingPlayground
                     if (posY < 0) posY = 0;
                     if (posY >= height) posY = height - 1;
 
-                    SetPixel(posX, posY, color);
+                    var perc = (float)posX / (float)w;
+                    var c = Color.Lerp(gradient.from, gradient.to, perc);
+                    SetPixel(posX, posY, c);
                 }
             }
+
+            float area = w * h;
+            System.Console.WriteLine(area + " m^2");
         }
 
         public void DrawCircle(int x, int y, int r, Color color)
         {
+            HandleEmptyImage();
+
             for (int _y = 0; _y <= r * 2; _y++)
             {
                 for (int _x = 0; _x <= r * 2; _x++)
@@ -235,6 +244,11 @@ namespace CodingPlayground
         }
 
         #endregion
+
+        protected void HandleEmptyImage()
+        {
+            if (pixelArray.size == 0) Fill(Color.white);
+        }
 
     }
 }

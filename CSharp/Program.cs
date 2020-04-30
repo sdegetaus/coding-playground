@@ -13,13 +13,12 @@ public class Program
         );
 
         Bitmap bitmap = new Bitmap(
-            width: 256,
-            height: 256
+            width: 64,
+            height: 64
         );
 
-        // bitmap.PerlinNoise(8, 1.0f);
-        bitmap.Noise();
-        bitmap.Posterize(3);
+        bitmap.Fill(Color.blue);
+        bitmap.DrawRectangle(0, 0, 64, 20, new Gradient(Color.black, Color.white));
 
         bitmap.Save(path);
 

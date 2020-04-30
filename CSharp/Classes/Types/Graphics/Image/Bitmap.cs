@@ -85,7 +85,8 @@ namespace CodingPlayground
 
         }
 
-        public void New() {
+        public void New()
+        {
             headerData.Clear();
             pixelArray.Clear();
             pixelArray = new PixelArray(width, height);
