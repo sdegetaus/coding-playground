@@ -191,7 +191,7 @@ namespace CodingPlayground
 
         public Color desaturate
         {
-            get => new Color((byte)(r + b + g) / 0x03);
+            get => new Color((r + b + g) / 3);
         }
 
         public static Color white

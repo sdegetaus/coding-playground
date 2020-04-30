@@ -57,27 +57,55 @@ namespace CodingPlayground
             }
         }
 
-        public void CreateNoise(float amount, bool monochromatic)
+        public void Noise()
         {
             var rand = new System.Random();
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var c = new Color((int)((rand.NextDouble() * 255f)));
+                    pixelArray.Add(c);
+                }
+            }
+        }
+
+        public void PerlinNoise(int octaves, float bias)
+        {
+            var rand = new System.Random();
+            float[] seeds = new float[width * height];
+            for (int i = 0; i < seeds.Length; i++) seeds[i] = (float)rand.NextDouble();
 
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (monochromatic)
+                    float noise = 0f;
+                    float scale = 1f;
+                    float scaleAcc = 0f;
+
+                    for (int o = 0; o < octaves; o++)
                     {
-                        var bwColor = Color.white;
-                        if (rand.Next(0, 2) != 1)
-                        {
-                            bwColor = Color.black;
-                        }
-                        pixelArray.Add(bwColor);
+                        int pitch = width >> o;
+                        int sampleX1 = (x / pitch) * pitch;
+                        int sampleY1 = (y / pitch) * pitch;
+
+                        int sampleX2 = (sampleX1 + pitch) % width;
+                        int sampleY2 = (sampleY1 + pitch) % height;
+
+                        float blendX = (float)(x - sampleX1) / (float)pitch;
+                        float blendY = (float)(y - sampleY1) / (float)pitch;
+
+                        float sampleT = (1.0f - blendX) * seeds[sampleY1 * width + sampleX1] + blendX * seeds[sampleY1 * width + sampleX2];
+                        float sampleB = (1.0f - blendX) * seeds[sampleY2 * width + sampleX1] + blendX * seeds[sampleY2 * width + sampleX2];
+
+                        noise += (blendY * (sampleB - sampleT) + sampleT) * scale;
+
+                        scaleAcc += scale;
+                        scale = scale / bias;
                     }
-                    else
-                    {
-                        pixelArray.Add(Color.random);
-                    }
+                    var c = new Color((int)((noise / scaleAcc) * 255f));
+                    pixelArray.Add(c);
                 }
             }
         }
@@ -135,6 +163,19 @@ namespace CodingPlayground
         public void Desaturate()
         {
             pixelArray.Map((color, index) => color.desaturate);
+        }
+
+        // experimental
+        public void DrawRectangle(int posX, int posY, int _width, int _height, Color color)
+        {
+            for (int y = 0; y < _height; y++)
+            {
+                for (int x = 0; x < _width; x++)
+                {
+                    System.Console.WriteLine(posX + x);
+                    SetPixel(posX + x, posY + y, color);
+                }
+            }
         }
 
         public void RemoveChannel(ColorChannel channel)
