@@ -175,19 +175,42 @@ namespace CodingPlayground
         }
 
         // experimental
-        public void DrawRectangle(int posX, int posY, int _width, int _height, Color color)
+        public void DrawRectangle(int x, int y, int w, int h, Color color)
         {
-            for (int y = 0; y < _height; y++)
+            for (int _y = 0; _y < h; _y++)
             {
-                for (int x = 0; x < _width; x++)
+                for (int _x = 0; _x < w; _x++)
                 {
-                    System.Console.WriteLine(posX + x);
-                    SetPixel(posX + x, posY + y, color);
+                    System.Console.WriteLine(x + _x);
+                    var posX = x + _x;
+                    var posY = y + _y;
+
+                    if (posX < 0)
+                    {
+                        posX = 0;
+                    }
+
+                    if (posX >= width)
+                    {
+                        posX = width - 1;
+                    }
+
+                    if (posY < 0)
+                    {
+                        posY = 0;
+                    }
+
+                    if (posY >= height)
+                    {
+                        posY = height - 1;
+                    }
+
+                    SetPixel(posX, posY, color);
                 }
             }
         }
 
-        public void DrawCircle(int posX, int  posY, int r, Color color)
+        public void DrawCircle(int posX, int posY, int r, Color color)
         {
             for (int x = posX - r; x <= posX + r * 2; x++)
             {
