@@ -1,29 +1,62 @@
-﻿public class Program
+﻿using CodingPlayground;
+using System;
+
+public struct Vector2
+{
+    public int x;
+    public int y;
+
+    public Vector2(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+public class Program
 {
     static void Main(string[] args)
     {
-        System.Console.WriteLine(234);
+        string path = System.IO.Path.Combine(@"/Users/taus/Desktop/output/output.bmp");
+        Bitmap bitmap = new Bitmap(32, 32);
+        bitmap.Fill(Color.black);
+
+        var cursor = new Vector2(-1, -1);
+
+        while (true)
+        {
+            var keyInfo = Console.ReadKey();
+            System.Console.WriteLine();
+
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    cursor.y++;
+                    break;
+                case ConsoleKey.RightArrow:
+                    cursor.x++;
+                    break;
+                case ConsoleKey.DownArrow:
+                    cursor.y--;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    cursor.x--;
+                    break;
+                case ConsoleKey.R:
+                    bitmap.Fill(Color.red);
+                    break;
+
+                case ConsoleKey.G:
+                    bitmap.Fill(Color.green);
+                    break;
+
+                case ConsoleKey.S:
+                    System.Console.WriteLine("Saved");
+                    break;
+            }
+
+            bitmap.SetPixel(cursor.x, cursor.y, Color.green);
+            bitmap.Save(path);
+        }
     }
-
-    #region Sorting
-
-    // System.Random rand = new System.Random();
-    // List<int> list = new List<int>(500);
-    // for (int i = 0; i < list.Capacity; i++) list.Add(rand.Next(0, 1001));
-    // var data = list.ToArray();
-
-    // int[] data = { 64, 25, 12, 22, 11, 1 };
-    // System.Console.WriteLine($"Original => [ {string.Join(", ", data)} ]");
-
-    // var bubble = Sorting.BubbleSort(data);
-    // var selection = Sorting.SelectionSort(data);
-    // var insertion = Sorting.InsertionSort(data);
-
-    // var resultList = new List<SortResult<int>>(bubble, selection, insertion);
-    // resultList.ForEach((e) =>
-    // {
-    //     System.Console.WriteLine($"{e.name} => {e.iterations}");
-    // });
-
-    #endregion
 }

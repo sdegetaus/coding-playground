@@ -6,6 +6,11 @@ namespace CodingPlayground
 
         private List<Color> pixels;
 
+        public int size
+        {
+            get => pixels.Count;
+        }
+
         #endregion
 
         #region Constructors
