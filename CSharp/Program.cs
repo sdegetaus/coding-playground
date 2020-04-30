@@ -1,29 +1,30 @@
-﻿public class Program
+﻿using CodingPlayground;
+
+public class Program
 {
     static void Main(string[] args)
     {
-        System.Console.WriteLine(234);
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
+        var path = System.IO.Path.Combine(
+            @"C:\Users\minim\Desktop\image_output",
+            "output.bmp"
+        );
+
+        Bitmap bitmap = new Bitmap(
+            width: 256,
+            height: 256
+        );
+
+        // bitmap.PerlinNoise(8, 1.0f);
+        bitmap.Noise();
+        bitmap.Posterize(3);
+
+        bitmap.Save(path);
+
+        stopwatch.Stop();
+        System.Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
     }
 
-    #region Sorting
-
-    // System.Random rand = new System.Random();
-    // List<int> list = new List<int>(500);
-    // for (int i = 0; i < list.Capacity; i++) list.Add(rand.Next(0, 1001));
-    // var data = list.ToArray();
-
-    // int[] data = { 64, 25, 12, 22, 11, 1 };
-    // System.Console.WriteLine($"Original => [ {string.Join(", ", data)} ]");
-
-    // var bubble = Sorting.BubbleSort(data);
-    // var selection = Sorting.SelectionSort(data);
-    // var insertion = Sorting.InsertionSort(data);
-
-    // var resultList = new List<SortResult<int>>(bubble, selection, insertion);
-    // resultList.ForEach((e) =>
-    // {
-    //     System.Console.WriteLine($"{e.name} => {e.iterations}");
-    // });
-
-    #endregion
 }
