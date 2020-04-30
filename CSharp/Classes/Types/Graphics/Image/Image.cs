@@ -198,7 +198,7 @@ namespace CodingPlayground
         public void DrawLine(Vector2 pos1, Vector2 pos2, Color color)
         {
             var f = Vector2.Distance(pos1, pos2);
-            System.Console.WriteLine(f);
+            // System.Console.WriteLine(f);
             // System.Console.WriteLine(pos1);
             // System.Console.WriteLine(pos2);
 

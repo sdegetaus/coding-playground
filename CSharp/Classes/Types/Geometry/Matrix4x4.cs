@@ -1,18 +1,41 @@
 namespace CodingPlayground
 {
-    public class Matrix4x4
+    public struct Matrix4x4
     {
-        public float[][] m;
+        #region Properties
 
-        public Matrix4x4()
+        private float[,] matrices;
+
+        public float this[int x, int y]
         {
-            m = new float[][] {
-                new float[4],
-                new float[4],
-                new float[4],
-                new float[4]
-            };
+            get
+            {
+                return matrices[x, y];
+            }
+            set
+            {
+                matrices[x, y] = value;
+            }
         }
 
+        #endregion
+
+        #region Constructors
+
+        public Matrix4x4(float[,] matrices)
+        {
+            this.matrices = matrices;
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public static Matrix4x4 zero
+        {
+            get => new Matrix4x4(new float[4, 4]);
+        }
+
+        #endregion
     }
 }

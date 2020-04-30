@@ -19,32 +19,7 @@ public class Program
 
         bitmap.Fill(Color.black);
 
-        var meshCube = new Mesh(12);
-        meshCube.tris.Add(
-            // SOUTH
-            new Triangle((0, 0, 0), (0, 1, 0), (1, 1, 0)),
-            new Triangle((0, 0, 0), (1, 1, 0), (1, 0, 0)),
-
-            // EAST
-            new Triangle((1, 0, 0), (1, 1, 0), (1, 1, 1)),
-            new Triangle((1, 0, 0), (1, 1, 1), (1, 0, 1)),
-
-            // NORTH
-            new Triangle((1, 0, 1), (1, 1, 1), (0, 1, 1)),
-            new Triangle((1, 0, 1), (0, 1, 1), (0, 0, 1)),
-
-            // WEST
-            new Triangle((0, 0, 1), (0, 1, 1), (0, 1, 0)),
-            new Triangle((0, 0, 1), (0, 1, 0), (0, 0, 0)),
-
-            // TOP
-            new Triangle((0, 1, 0), (0, 1, 1), (1, 1, 1)),
-            new Triangle((0, 1, 0), (1, 1, 1), (1, 1, 0)),
-
-            // BOTTOM
-            new Triangle((1, 0, 1), (0, 0, 1), (0, 0, 0)),
-            new Triangle((1, 0, 1), (0, 0, 0), (1, 0, 0))
-        );
+        var cubeMesh = Mesh.Cube;
 
         // Projection Matrix
         float near = 0.1f;
@@ -53,78 +28,83 @@ public class Program
         float aspectRatio = (float)HEIGHT / (float)WIDTH;
         float fovRad = 1.0f / (float)Math.Tan(fov * 0.5f / 180f * Math.PI);
 
-        Matrix4x4 matProj = new Matrix4x4();
-        matProj.m[0][0] = aspectRatio * fovRad;
-        matProj.m[1][1] = fovRad;
-        matProj.m[2][2] = far / (far - near);
-        matProj.m[3][2] = (-far * near) / (far - near);
-        matProj.m[2][3] = 1.0f;
-        matProj.m[3][3] = 0.0f;
+        Matrix4x4 projMatrix = Matrix4x4.zero;
+        projMatrix[0, 0] = aspectRatio * fovRad;
+        projMatrix[1, 1] = fovRad;
+        projMatrix[2, 2] = far / (far - near);
+        projMatrix[3, 2] = (-far * near) / (far - near);
+        projMatrix[2, 3] = 1.0f;
+        projMatrix[3, 3] = 0.0f;
+
+        Matrix4x4 matRotZ = Matrix4x4.zero;
+        Matrix4x4 matRotX = Matrix4x4.zero;
 
         float elapsedTime = 500.0f;
-        Matrix4x4 matRotZ = new Matrix4x4();
-        Matrix4x4 matRotX = new Matrix4x4();
-        float fTheta = 1.0f * elapsedTime;
+        float theta = 1.0f * elapsedTime;
 
         // rot z
-        matRotZ.m[0][0] = (float)Math.Cos(fTheta);
-        matRotZ.m[0][1] = (float)Math.Sin(fTheta);
-        matRotZ.m[1][0] = -(float)Math.Sin(fTheta);
-        matRotZ.m[1][1] = -(float)Math.Cos(fTheta);
-        matRotZ.m[2][2] = 1f;
-        matRotZ.m[3][3] = 1f;
+        matRotZ[0, 0] = (float)Math.Cos(theta);
+        matRotZ[0, 1] = (float)Math.Sin(theta);
+        matRotZ[1, 0] = -(float)Math.Sin(theta);
+        matRotZ[1, 1] = -(float)Math.Cos(theta);
+        matRotZ[2, 2] = 1f;
+        matRotZ[3, 3] = 1f;
 
         // rot x
-        matRotX.m[0][0] = 1f;
-        matRotX.m[1][1] = (float)Math.Cos(fTheta * 0.5f);
-        matRotX.m[1][2] = (float)Math.Sin(fTheta * 0.5f);
-        matRotX.m[2][1] = -(float)Math.Sin(fTheta * 0.5f);
-        matRotX.m[2][2] = -(float)Math.Cos(fTheta * 0.5f);
-        matRotX.m[3][3] = 1f;
+        matRotX[0, 0] = 1f;
+        matRotX[1, 1] = (float)Math.Cos(theta * 0.5f);
+        matRotX[1, 2] = (float)Math.Sin(theta * 0.5f);
+        matRotX[2, 1] = -(float)Math.Sin(theta * 0.5f);
+        matRotX[2, 2] = -(float)Math.Cos(theta * 0.5f);
+        matRotX[3, 3] = 1f;
 
 
-        for (int i = 0; i < meshCube.tris.Count; i++)
+        for (int i = 0; i < cubeMesh.Count; i++)
         {
-            Triangle tri = meshCube.tris[i];
-            Triangle triProjected = new Triangle();
-            Triangle triTranslated = new Triangle();
+            var tri = cubeMesh[i];
+            var triProjected = Triangle.zero;
+            var triTranslated = Triangle.zero;
 
-            Triangle triRotatedZ = new Triangle();
-            Triangle triRotatedZX = new Triangle();
+            var triRotatedZ = Triangle.zero;
+            var triRotatedZX = Triangle.zero;
 
-            MultiplyMatrixVector(ref tri.p[0], ref triRotatedZ.p[0], matRotZ);
-            MultiplyMatrixVector(ref tri.p[1], ref triRotatedZ.p[1], matRotZ);
-            MultiplyMatrixVector(ref tri.p[2], ref triRotatedZ.p[2], matRotZ);
+            triRotatedZ[0] = MultiplyMatrixVector(tri[0], matRotZ);
+            triRotatedZ[1] = MultiplyMatrixVector(tri[1], matRotZ);
+            triRotatedZ[2] = MultiplyMatrixVector(tri[2], matRotZ);
 
-            MultiplyMatrixVector(ref triRotatedZ.p[0], ref triRotatedZX.p[0], matRotX);
-            MultiplyMatrixVector(ref triRotatedZ.p[1], ref triRotatedZX.p[1], matRotX);
-            MultiplyMatrixVector(ref triRotatedZ.p[2], ref triRotatedZX.p[2], matRotX);
+            triRotatedZX[0] = MultiplyMatrixVector(triRotatedZ[0], matRotX);
+            triRotatedZX[1] = MultiplyMatrixVector(triRotatedZ[1], matRotX);
+            triRotatedZX[2] = MultiplyMatrixVector(triRotatedZ[2], matRotX);
 
             triTranslated = triRotatedZX;
-            triTranslated.p[0].z = triRotatedZX.p[0].z + 3.0f;
-            triTranslated.p[1].z = triRotatedZX.p[1].z + 3.0f;
-            triTranslated.p[2].z = triRotatedZX.p[2].z + 3.0f;
+            triTranslated[0] = triTranslated[0].With(z: triRotatedZX[0].z + 3.0f);
+            triTranslated[1] = triTranslated[1].With(z: triRotatedZX[1].z + 3.0f);
+            triTranslated[2] = triTranslated[2].With(z: triRotatedZX[2].z + 3.0f);
 
-            MultiplyMatrixVector(ref triTranslated.p[0], ref triProjected.p[0], matProj);
-            MultiplyMatrixVector(ref triTranslated.p[1], ref triProjected.p[1], matProj);
-            MultiplyMatrixVector(ref triTranslated.p[2], ref triProjected.p[2], matProj);
+
+            triProjected[0] = MultiplyMatrixVector(triTranslated[0], projMatrix);
+            triProjected[1] = MultiplyMatrixVector(triTranslated[1], projMatrix);
+            triProjected[2] = MultiplyMatrixVector(triTranslated[2], projMatrix);
 
             // Scale into view
-            triProjected.p[0].x += 1f; triProjected.p[0].y += 1f;
-            triProjected.p[1].x += 1f; triProjected.p[1].y += 1f;
-            triProjected.p[2].x += 1f; triProjected.p[2].y += 1f;
+            triProjected[0] = triProjected[0].With(x: triProjected[0].x + 1.0f);
+            triProjected[0] = triProjected[0].With(y: triProjected[0].y + 1.0f);
+            triProjected[1] = triProjected[1].With(x: triProjected[1].x + 1.0f);
+            triProjected[1] = triProjected[1].With(y: triProjected[1].y + 1.0f);
+            triProjected[2] = triProjected[2].With(x: triProjected[2].x + 1.0f);
+            triProjected[2] = triProjected[2].With(y: triProjected[2].y + 1.0f);
 
-            triProjected.p[0].x *= 0.5f * (float)WIDTH;
-            triProjected.p[0].y *= 0.5f * (float)HEIGHT;
-            triProjected.p[1].x *= 0.5f * (float)WIDTH;
-            triProjected.p[1].y *= 0.5f * (float)HEIGHT;
-            triProjected.p[2].x *= 0.5f * (float)WIDTH;
-            triProjected.p[2].y *= 0.5f * (float)HEIGHT;
+            triProjected[0] = triProjected[0].With(x: triProjected[0].x * 0.5f * (float)(WIDTH));
+            triProjected[0] = triProjected[0].With(y: triProjected[0].y * 0.5f * (float)(HEIGHT));
+            triProjected[1] = triProjected[1].With(x: triProjected[1].x * 0.5f * (float)(WIDTH));
+            triProjected[1] = triProjected[1].With(y: triProjected[1].y * 0.5f * (float)(HEIGHT));
+            triProjected[2] = triProjected[2].With(x: triProjected[2].x * 0.5f * (float)(WIDTH));
+            triProjected[2] = triProjected[2].With(y: triProjected[2].y * 0.5f * (float)(HEIGHT));
 
             bitmap.DrawTriangle(
-                (int)triProjected.p[0].x, (int)triProjected.p[0].y,
-                (int)triProjected.p[1].x, (int)triProjected.p[1].y,
-                (int)triProjected.p[2].x, (int)triProjected.p[2].y,
+                (int)triProjected[0].x, (int)triProjected[0].y,
+                (int)triProjected[1].x, (int)triProjected[1].y,
+                (int)triProjected[2].x, (int)triProjected[2].y,
                 Color.white
             );
         }
@@ -135,19 +115,22 @@ public class Program
         System.Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
     }
 
-    static void MultiplyMatrixVector(ref Vector3 i, ref Vector3 o, Matrix4x4 m)
+    public static Vector3 MultiplyMatrixVector(Vector3 input, Matrix4x4 matrix)
     {
-        o.x = i.x * m.m[0][0] + i.y * m.m[1][0] + i.z * m.m[2][0] + m.m[3][0];
-        o.y = i.x * m.m[0][1] + i.y * m.m[1][1] + i.z * m.m[2][1] + m.m[3][1];
-        o.z = i.x * m.m[0][2] + i.y * m.m[1][2] + i.z * m.m[2][2] + m.m[3][2];
-        float w = i.x * m.m[0][3] + i.y * m.m[1][3] + i.z * m.m[2][3] + m.m[3][3];
+        var output = Vector3.zero;
+        output.x = input.x * matrix[0, 0] + input.y * matrix[1, 0] + input.z * matrix[2, 0] + matrix[3, 0];
+        output.y = input.x * matrix[0, 1] + input.y * matrix[1, 1] + input.z * matrix[2, 1] + matrix[3, 1];
+        output.z = input.x * matrix[0, 2] + input.y * matrix[1, 2] + input.z * matrix[2, 2] + matrix[3, 2];
+        float w = input.x * matrix[0, 3] + input.y * matrix[1, 3] + input.z * matrix[2, 3] + matrix[3, 3];
 
         if (w != 0.0f)
         {
-            o.x /= w;
-            o.y /= w;
-            o.z /= w;
+            output.x /= w;
+            output.y /= w;
+            output.z /= w;
         }
+
+        return output;
     }
 
 

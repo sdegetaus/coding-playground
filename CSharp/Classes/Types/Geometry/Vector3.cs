@@ -21,6 +21,13 @@ namespace CodingPlayground
             this.z = z;
         }
 
+        public Vector3(int x, int y, int z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
         #endregion
 
         #region Static Properties
@@ -91,13 +98,29 @@ namespace CodingPlayground
 
         #endregion
 
-        public override string ToString()
+        #region Public Methods
+
+        public Vector3 With(float? x = null, float? y = null, float? z = null)
         {
-            return $"{x}, {y}, {z}";
+            return new Vector3(x ?? this.x, y ?? this.y, z ?? this.z);
         }
 
-        public static implicit operator Vector3((int x, int y, int z) t) => new Vector3(t.x, t.y, t.z);
-        public static implicit operator Vector3((float x, float y, float z) t) => new Vector3(t.x, t.y, t.z);
+        public override string ToString() => $"{x}, {y}, {z}";
 
+        #endregion
+
+        #region Operators
+
+        public static implicit operator Vector3((int x, int y, int z) t)
+        {
+            return new Vector3(t.x, t.y, t.z);
+        }
+
+        public static implicit operator Vector3((float x, float y, float z) t)
+        {
+            return new Vector3(t.x, t.y, t.z);
+        }
+
+        #endregion
     }
 }

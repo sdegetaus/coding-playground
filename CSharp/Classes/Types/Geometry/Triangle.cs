@@ -1,29 +1,76 @@
-using System.Collections;
-
 namespace CodingPlayground
 {
-    public class Triangle
+    public struct Triangle
     {
-        public Vector3[] p;
+        #region Properties
 
-        public Triangle()
+        private Vector3 p0;
+
+        private Vector3 p1;
+
+        private Vector3 p2;
+
+        public Vector3 this[int index]
         {
-            this.p = new Vector3[3];
+            get
+            {
+                switch (index)
+                {
+                    default:
+                        throw new System.NullReferenceException();
+                    case 0:
+                        return p0;
+                    case 1:
+                        return p1;
+                    case 2:
+                        return p2;
+                }
+            }
+            set
+            {
+                switch (index)
+                {
+                    default:
+                        throw new System.NullReferenceException();
+                    case 0:
+                        p0 = value;
+                        break;
+                    case 1:
+                        p1 = value;
+                        break;
+                    case 2:
+                        p2 = value;
+                        break;
+                }
+            }
         }
 
-        public Triangle(Vector3 p1, Vector3 p2, Vector3 p3)
+        #endregion
+
+        #region Constructors
+
+        public Triangle(Vector3 p0, Vector3 p1, Vector3 p2)
         {
-            this.p = new Vector3[3] { p1, p2, p3 };
+            this.p0 = p0;
+            this.p1 = p1;
+            this.p2 = p2;
         }
 
-        public override string ToString()
+        #endregion
+
+        #region Public Methods
+
+        public static Triangle zero
         {
-            var result = string.Empty;
-            for (int i = 0; i < p.Length; i++)
-                result += $"T: ({p[i]}) ";
-            return result;
+            get => new Triangle((0, 0, 0), (0, 0, 0), (0, 0, 0));
         }
 
-        public static implicit operator Triangle(Vector3[] v) => new Triangle(v[0], v[1], v[2]);
+        #endregion
+
+        #region Public Methods
+
+        public override string ToString() => $"{p0}, {p1}, {p2}";
+
+        #endregion
     }
 }
