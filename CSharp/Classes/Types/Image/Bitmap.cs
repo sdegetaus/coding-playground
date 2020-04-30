@@ -20,6 +20,7 @@ namespace CodingPlayground
 
         private void FillHeader()
         {
+            headerData.Clear();
             headerData.Add(Encoding.ASCII.GetBytes("BM"));              // 00
             headerData.Add(new byte[] { 0x46, 0x00, 0x00, 0x00 });      // 02
             headerData.Add(new byte[] { 0x00, 0x00 });                  // 06
@@ -40,6 +41,11 @@ namespace CodingPlayground
 
         public override void Save(string savePath)
         {
+            if (pixelArray.size == 0)
+            {
+                return;
+            }
+
             if (!System.IO.File.Exists(savePath))
             {
                 System.IO.File.Create(savePath);
@@ -77,6 +83,12 @@ namespace CodingPlayground
                 }
             }
 
+        }
+
+        public void New() {
+            headerData.Clear();
+            pixelArray.Clear();
+            pixelArray = new PixelArray(width, height);
         }
 
         #endregion
