@@ -48,6 +48,16 @@ namespace CodingPlayground
             }
         }
 
+        public Color desaturate
+        {
+            get => new Color((int)average);
+        }
+
+        public float average
+        {
+            get => (r + g + b) / 3f;
+        }
+
         #endregion
 
         #region Constructors
@@ -155,6 +165,14 @@ namespace CodingPlayground
             return start + percent * (end - start);
         }
 
+        public static float Distance(Color start, Color end)
+        {
+            float dr = (start.r + end.r) / 2f;
+            float dg = (start.g + end.g) / 2f;
+            float db = (start.b + end.b) / 2f;
+            return (dr + dg + db) / 3f;
+        }
+
         #endregion
 
         #region Operators
@@ -188,11 +206,6 @@ namespace CodingPlayground
         #endregion
 
         #region Static Properties
-
-        public Color desaturate
-        {
-            get => new Color((r + b + g) / 3);
-        }
 
         public static Color white
         {
