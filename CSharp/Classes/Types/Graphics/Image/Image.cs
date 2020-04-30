@@ -195,6 +195,40 @@ namespace CodingPlayground
             });
         }
 
+        public void DrawLine(Vector2 pos1, Vector2 pos2, Color color)
+        {
+            var f = Vector2.Distance(pos1, pos2);
+            System.Console.WriteLine(f);
+            // System.Console.WriteLine(pos1);
+            // System.Console.WriteLine(pos2);
+
+            for (int i = 0; i < f; i++)
+            {
+                var lerp = Vector2.Lerp(pos1, pos2, (1f / f) * i);
+                // System.Console.WriteLine($"{i} => {lerp} {(1f / f) * i}");
+                // System.Console.WriteLine($"NADA");
+
+                var finalPos = lerp;
+
+                if (finalPos.x < 0 ||
+                    finalPos.y < 0 ||
+                    finalPos.x >= width ||
+                    finalPos.y >= width)
+                {
+                    continue;
+                }
+
+                SetPixel(finalPos.x, finalPos.y, color);
+            }
+        }
+
+        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color c)
+        {
+            DrawLine(new Vector2(x1, y1), new Vector2(x2, y2), c);
+            DrawLine(new Vector2(x2, y2), new Vector2(x3, y3), c);
+            DrawLine(new Vector2(x3, y3), new Vector2(x1, y1), c);
+        }
+
         public void DrawRectangle(int x, int y, int w, int h, Gradient gradient)
         {
             HandleEmptyImage();
