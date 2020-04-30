@@ -112,14 +112,11 @@ namespace CodingPlayground
 
         public void LinearGradient(Color from, Color to)
         {
-            float yoff = 0f;
-            float xoff = 0f;
             for (int y = 0; y < height; y++)
             {
-                xoff = 0;
                 for (int x = 0; x < width; x++)
                 {
-                    var perc = (float)y / (float)height; // vertical
+                    var perc = (float)y / (float)height;    // vertical
                     // var perc = (float)x / (float)height; // horizontal
                     // var perc = (float)-(x + 1f) / (float)(width) *
                     //            (float)(y + 1f) / (float)(height); // horizontal
@@ -128,9 +125,25 @@ namespace CodingPlayground
 
                     var c = Color.Lerp(from, to, perc);
                     pixelArray.Add(c);
-                    xoff += -.5f;
                 }
-                yoff += -.5f;
+            }
+        }
+
+        public void RadialGradient(Color from, Color to)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var mX = width / 2f;
+                    var mY = height / 2f;
+
+                    var perc = 2f * (float)((x - mX) * (x - mX) + (y - mY) * (y - mY)) /
+                                    (float)(width * height);
+
+                    var c = Color.Lerp(from, to, perc);
+                    pixelArray.Add(c);
+                }
             }
         }
 
@@ -174,76 +187,51 @@ namespace CodingPlayground
             pixelArray.Map((color, index) => color.desaturate);
         }
 
-        // experimental
-        public void DrawRectangle(int x, int y, int w, int h, Color color)
-        {
-            for (int _y = 0; _y < h; _y++)
-            {
-                for (int _x = 0; _x < w; _x++)
-                {
-                    System.Console.WriteLine(x + _x);
-                    var posX = x + _x;
-                    var posY = y + _y;
-
-                    if (posX < 0)
-                    {
-                        posX = 0;
-                    }
-
-                    if (posX >= width)
-                    {
-                        posX = width - 1;
-                    }
-
-                    if (posY < 0)
-                    {
-                        posY = 0;
-                    }
-
-                    if (posY >= height)
-                    {
-                        posY = height - 1;
-                    }
-
-                    SetPixel(posX, posY, color);
-                }
-            }
-        }
-
-        public void DrawCircle(int posX, int posY, int r, Color color)
-        {
-            for (int x = posX - r; x <= posX + r * 2; x++)
-            {
-                for (int y = posY - r; y <= posY + r * 2; y++)
-                {
-                    var f = (x - r) * (x - r) + (y - r) * (y - r);
-                    System.Console.WriteLine(f);
-                    if (f <= r * r)
-                    {
-                        SetPixel(x, y, color);
-                    }
-                }
-            }
-        }
-
-
-        // for(int i = start_X - r; i <= start_X + r; i++)
-        // {
-        //    for(int j = start_Y - r; j <= start_Y + r; j++)
-        //    {
-        //        if((i-r)*(i-r) + (j-r)*(j-r) <= r*r)
-        //        {
-        //          circlePoints.push_back(std::pair<int>(i,j));
-        //        }
-        //    }
-        // }
-
         public void RemoveChannel(ColorChannel channel)
         {
             pixelArray.Map((color, index) =>
             {
                 return color.RemoveChannel(channel);
             });
+        }
+
+        public void DrawRectangle(int x, int y, int w, int h, Color color)
+        {
+            for (int _y = 0; _y < h; _y++)
+            {
+                for (int _x = 0; _x < w; _x++)
+                {
+                    var posX = x + _x;
+                    var posY = y + _y;
+                    if (posX < 0) posX = 0;
+                    if (posX >= width) posX = width - 1;
+                    if (posY < 0) posY = 0;
+                    if (posY >= height) posY = height - 1;
+
+                    SetPixel(posX, posY, color);
+                }
+            }
+        }
+
+        public void DrawCircle(int x, int y, int r, Color color)
+        {
+            for (int _y = 0; _y <= r * 2; _y++)
+            {
+                for (int _x = 0; _x <= r * 2; _x++)
+                {
+                    var posX = x + _x;
+                    var posY = y + _y;
+                    if (posX < 0) posX = 0;
+                    if (posX >= width) posX = width - 1;
+                    if (posY < 0) posY = 0;
+                    if (posY >= height) posY = height - 1;
+
+                    if ((_x - r) * (_x - r) + (_y - r) * (_y - r) <= r * r)
+                    {
+                        SetPixel(posX, posY, color);
+                    }
+                }
+            }
         }
 
         #endregion
