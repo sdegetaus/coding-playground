@@ -23,7 +23,7 @@ public class Program
         stopwatch.Start();
 
         var path = System.IO.Path.Combine(
-            @"C:\Users\minim\Desktop\image_output",
+            $@"{System.AppDomain.CurrentDomain.BaseDirectory}",
             "output.bmp"
         );
 
