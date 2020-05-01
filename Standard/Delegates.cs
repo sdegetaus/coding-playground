@@ -1,4 +1,4 @@
-namespace Console3D.Standard
+namespace Console3D
 {
     public delegate void Action();
     public delegate void Action<in T>(T obj);

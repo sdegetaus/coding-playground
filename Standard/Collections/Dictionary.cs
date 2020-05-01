@@ -1,4 +1,4 @@
-namespace Console3D.Standard
+namespace Console3D.Collections
 {
     public class Dictionary<TKey, TValue> : Collection<KeyValuePair<TKey, TValue>>
     {

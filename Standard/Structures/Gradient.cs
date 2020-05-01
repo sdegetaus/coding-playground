@@ -1,4 +1,4 @@
-namespace Console3D.Standard
+namespace Console3D
 {
     public struct Gradient
     {

@@ -1,4 +1,4 @@
-namespace Console3D.Standard
+namespace Console3D.Collections
 {
     public abstract class Collection<T>
     {
@@ -147,8 +147,9 @@ namespace Console3D.Standard
 
         protected void Remove(T item)
         {
-            var result = Searching.LinearSearch(item, items);
-            if (result.found) RemoveFrom(result.index);
+            // var result = Searching.LinearSearch(item, items);
+            // if (result.found) RemoveFrom(result.index);
+            throw new System.NotImplementedException();
         }
 
         protected void RemoveFrom(int index)
@@ -162,19 +163,24 @@ namespace Console3D.Standard
             Count--;
         }
 
-        protected bool Contains(T item) => Searching.LinearSearch(item, items).found;
+        protected bool Contains(T item)
+        {
+            throw new System.NotImplementedException();
+            // Searching.LinearSearch(item, items).found;
+        }
 
         protected int IndexOf(T item)
         {
-            var result = Searching.LinearSearch(item, items);
-            if (result.found)
-            {
-                return result.index;
-            }
-            else
-            {
-                return -1;
-            }
+            throw new System.NotImplementedException();
+            // var result = Searching.LinearSearch(item, items);
+            // if (result.found)
+            // {
+            //     return result.index;
+            // }
+            // else
+            // {
+            //     return -1;
+            // }
         }
 
         protected void Clear()
