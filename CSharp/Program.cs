@@ -15,23 +15,23 @@ public class Program
 
     static Vector3 vCamera = Vector3.zero;
 
-    static int WIDTH= 800;
-    static int HEIGHT= 800;
+    static int WIDTH = 400;
+    static int HEIGHT = 400;
 
     static Bitmap bitmap = new Bitmap(WIDTH, HEIGHT);
 
     static void Main(string[] args)
     {
-        var stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-
         var path = System.IO.Path.Combine(
             $@"{System.AppDomain.CurrentDomain.BaseDirectory}",
             "output.bmp"
         );
 
-        bitmap.Save(path);
-        return;
+        // bitmap.DrawTriangle(5, 5, 5, 95, 95, 5, Color.black);
+        // bitmap.FillTriangle(5, 5, 5, 95, 95, 5, Color.black);
+
+        // bitmap.Save(path);
+        // return;
 
         // Projection Matrix
         float near = 0.1f;
@@ -63,8 +63,6 @@ public class Program
                     Runtime();
                     break;
                 case System.ConsoleKey.Escape:
-                    stopwatch.Stop();
-                    System.Console.WriteLine($"\nTime elapsed: {stopwatch.Elapsed}");
                     return;
             }
             bitmap.Save(path);
@@ -73,7 +71,10 @@ public class Program
 
     public static void Runtime()
     {
-        bitmap.Fill(0, 0, WIDTH, HEIGHT, Color.red);
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
+        bitmap.Fill(0, 0, WIDTH, HEIGHT, Color.black);
         theta = 1f * ElapsedTime;
 
         // rot z
@@ -149,6 +150,7 @@ public class Program
                 lightDir.z /= l;
 
                 var dp = normal.x * lightDir.x + normal.y * lightDir.y + normal.z * lightDir.z;
+                System.Console.WriteLine(dp);
 
                 // Project lines from 3D --> 2D
                 triProjected.p0 = MultiplyMatrixVector(triTranslated.p0, projMatrix);
@@ -172,14 +174,24 @@ public class Program
                 triProjected.p1.Select(y: triProjected.p1.y * 0.5f * (float)(HEIGHT));
                 triProjected.p2.Select(y: triProjected.p2.y * 0.5f * (float)(HEIGHT));
 
-                bitmap.DrawTriangle(
+                bitmap.FillTriangle(
                     (int)triProjected.p0.x, (int)triProjected.p0.y,
                     (int)triProjected.p1.x, (int)triProjected.p1.y,
                     (int)triProjected.p2.x, (int)triProjected.p2.y,
-                    Color.yellow
+                    Color.white * dp
                 );
+
+                // bitmap.DrawTriangle(
+                //     (int)triProjected.p0.x, (int)triProjected.p0.y,
+                //     (int)triProjected.p1.x, (int)triProjected.p1.y,
+                //     (int)triProjected.p2.x, (int)triProjected.p2.y,
+                //     Color.black
+                // );
             }
         }
+
+        stopwatch.Stop();
+        System.Console.WriteLine($"\nTime elapsed: {stopwatch.Elapsed}");
     }
 
     public static Vector3 MultiplyMatrixVector(Vector3 input, Matrix4x4 matrix)

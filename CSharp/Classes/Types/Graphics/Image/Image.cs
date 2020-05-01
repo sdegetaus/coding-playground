@@ -72,7 +72,7 @@ namespace CodingPlayground
                         continue;
                     }
 
-                    var perc = (float)pos.x / (float)w;
+                    // var perc = (float)pos.x / (float)w;
                     // var c = Color.Lerp(gradient.from, gradient.to, perc);
                     SetPixel(pos, color);
                 }
@@ -105,6 +105,37 @@ namespace CodingPlayground
             DrawLine(new Vector2(x1, y1), new Vector2(x2, y2), c);
             DrawLine(new Vector2(x2, y2), new Vector2(x3, y3), c);
             DrawLine(new Vector2(x3, y3), new Vector2(x1, y1), c);
+        }
+
+        public void FillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, Color c)
+        {
+            // TODO: improve (no width or height)
+            float area = 0.5f * (-y1 * x2 + y0 * (-x1 + x2) + x0 * (y1 - y2) + x1 * y2);
+
+            for (int _y = 0; _y < height; _y++)
+            {
+                for (int _x = 0; _x < width; _x++)
+                {
+                    Vector2 pos = new Vector2(_x, _y);
+
+                    if (pos.x < 0 ||
+                        pos.y < 0 ||
+                        pos.x >= width ||
+                        pos.y >= width)
+                    {
+                        continue;
+                    }
+
+                    float s = 1f / (2f * area) * (y0 * x2 - x0 * y2 + (y2 - y0) * pos.x + (x0 - x2) * pos.y);
+                    float t = 1f / (2f * area) * (x0 * y1 - y0 * x1 + (y0 - y1) * pos.x + (x1 - x0) * pos.y);
+
+                    if (s > 0f && t > 0f && 1f - s - t > 0f)
+                    {
+                        SetPixel(pos, c);
+                    }
+                    else { continue; }
+                }
+            }
         }
 
         public void DrawCircle(int x, int y, int r, Color color)

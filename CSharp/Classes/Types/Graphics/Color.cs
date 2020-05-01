@@ -227,6 +227,11 @@ namespace CodingPlayground
             get => new Color(0x00, 0xFF, 0x00);
         }
 
+        public static Color grey
+        {
+            get => new Color(0x88, 0x88, 0x88);
+        }
+
         public static Color blue
         {
             get => new Color(0x00, 0x00, 0xFF);
