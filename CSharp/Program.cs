@@ -5,9 +5,6 @@ public class Program
     static float ElapsedTime = 0.0f;
     static float theta = 0.0f;
 
-    static int WIDTH = 800;
-    static int HEIGHT = 800;
-
     static Mesh cubeMesh = Mesh.Cube;
 
     static Matrix4x4 projMatrix = Matrix4x4.zero;
@@ -17,6 +14,9 @@ public class Program
     static Matrix4x4 rotationMatX = Matrix4x4.zero;
 
     static Vector3 vCamera = Vector3.zero;
+
+    static int WIDTH= 800;
+    static int HEIGHT= 800;
 
     static Bitmap bitmap = new Bitmap(WIDTH, HEIGHT);
 
@@ -29,8 +29,6 @@ public class Program
             $@"{System.AppDomain.CurrentDomain.BaseDirectory}",
             "output.bmp"
         );
-
-        
 
         bitmap.Save(path);
         return;
@@ -48,8 +46,6 @@ public class Program
         projMatrix[3, 2] = (-far * near) / (far - near);
         projMatrix[2, 3] = 1.0f;
         projMatrix[3, 3] = 0.0f;
-
-        bitmap.Fill(Color.black);
 
         System.Console.WriteLine("Reading input...");
         while (true)
@@ -77,7 +73,7 @@ public class Program
 
     public static void Runtime()
     {
-        bitmap.Fill(Color.black);
+        bitmap.Fill(0, 0, WIDTH, HEIGHT, Color.red);
         theta = 1f * ElapsedTime;
 
         // rot z

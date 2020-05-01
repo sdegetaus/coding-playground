@@ -27,7 +27,12 @@ namespace CodingPlayground
         {
             this.width = width;
             this.height = height;
+
             pixelArray = new PixelArray(width, height);
+
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
+                    pixelArray.Add(Color.white);
         }
 
         #endregion
@@ -46,29 +51,86 @@ namespace CodingPlayground
             pixelArray.SetPixel(y * height + x, color);
         }
 
-        public void Fill(Color color)
+        public void SetPixel(Vector2 pos, Color color)
         {
-            if (pixelArray.size == 0)
+            pixelArray.SetPixel(pos.y * height + pos.x, color);
+        }
+
+        public void Fill(int x, int y, int w, int h, Color color)
+        {
+            for (int _y = 0; _y < h; _y++)
             {
-                for (int y = 0; y < height; y++)
+                for (int _x = 0; _x < w; _x++)
                 {
-                    for (int x = 0; x < width; x++)
+                    Vector2 pos = new Vector2(x + _x, y + _y);
+
+                    if (pos.x < 0 ||
+                        pos.y < 0 ||
+                        pos.x >= width ||
+                        pos.y >= width)
                     {
-                        pixelArray.Add(color);
+                        continue;
                     }
+
+                    var perc = (float)pos.x / (float)w;
+                    // var c = Color.Lerp(gradient.from, gradient.to, perc);
+                    SetPixel(pos, color);
                 }
             }
-            else
+        }
+
+        public void DrawLine(Vector2 pos1, Vector2 pos2, Color color)
+        {
+            var f = Vector2.Distance(pos1, pos2);
+
+            for (int i = 0; i < f; i++)
             {
-                for (int y = 0; y < height; y++)
+                var lerp = Vector2.Lerp(pos1, pos2, (1f / f) * i);
+                var finalPos = lerp;
+
+                if (finalPos.x < 0 ||
+                    finalPos.y < 0 ||
+                    finalPos.x >= width ||
+                    finalPos.y >= width)
                 {
-                    for (int x = 0; x < width; x++)
+                    continue;
+                }
+
+                SetPixel(finalPos.x, finalPos.y, color);
+            }
+        }
+
+        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color c)
+        {
+            DrawLine(new Vector2(x1, y1), new Vector2(x2, y2), c);
+            DrawLine(new Vector2(x2, y2), new Vector2(x3, y3), c);
+            DrawLine(new Vector2(x3, y3), new Vector2(x1, y1), c);
+        }
+
+        public void DrawCircle(int x, int y, int r, Color color)
+        {
+            for (int _y = 0; _y <= r * 2; _y++)
+            {
+                for (int _x = 0; _x <= r * 2; _x++)
+                {
+                    var posX = x + _x;
+                    var posY = y + _y;
+                    if (posX < 0) posX = 0;
+                    if (posX >= width) posX = width - 1;
+                    if (posY < 0) posY = 0;
+                    if (posY >= height) posY = height - 1;
+
+                    if ((_x - r) * (_x - r) + (_y - r) * (_y - r) <= r * r)
                     {
-                        SetPixel(x, y, color);
+                        SetPixel(posX, posY, color);
                     }
                 }
             }
         }
+
+        #endregion
+
+        #region Effects
 
         public void Noise()
         {
@@ -123,43 +185,6 @@ namespace CodingPlayground
             }
         }
 
-        public void LinearGradient(Color from, Color to)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    var perc = (float)y / (float)height;    // vertical
-
-                    // var perc = (float)x / (float)height; // horizontal
-
-                    // var perc = (float)-(x + 1f) / (float)(width) *
-                    //            (float)(y + 1f) / (float)(height); // horizontal
-
-                    var c = Color.Lerp(from, to, perc);
-                    pixelArray.Add(c);
-                }
-            }
-        }
-
-        public void RadialGradient(Color from, Color to)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    var mX = width / 2f;
-                    var mY = height / 2f;
-
-                    var perc = 2f * (float)((x - mX) * (x - mX) + (y - mY) * (y - mY)) /
-                                    (float)(width * height);
-
-                    var c = Color.Lerp(from, to, perc);
-                    pixelArray.Add(c);
-                }
-            }
-        }
-
         public void Invert()
         {
             pixelArray.Map((color, index) => color.Invert());
@@ -208,94 +233,43 @@ namespace CodingPlayground
             });
         }
 
-        public void DrawLine(Vector2 pos1, Vector2 pos2, Color color)
+        public void LinearGradient(Color from, Color to)
         {
-            var f = Vector2.Distance(pos1, pos2);
-            // System.Console.WriteLine(f);
-            // System.Console.WriteLine(pos1);
-            // System.Console.WriteLine(pos2);
-
-            for (int i = 0; i < f; i++)
+            for (int y = 0; y < height; y++)
             {
-                var lerp = Vector2.Lerp(pos1, pos2, (1f / f) * i);
-                // System.Console.WriteLine($"{i} => {lerp} {(1f / f) * i}");
-                // System.Console.WriteLine($"NADA");
-
-                var finalPos = lerp;
-
-                if (finalPos.x < 0 ||
-                    finalPos.y < 0 ||
-                    finalPos.x >= width ||
-                    finalPos.y >= width)
+                for (int x = 0; x < width; x++)
                 {
-                    continue;
-                }
+                    var perc = (float)y / (float)height;    // vertical
 
-                SetPixel(finalPos.x, finalPos.y, color);
-            }
-        }
+                    // var perc = (float)x / (float)height; // horizontal
 
-        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color c)
-        {
-            DrawLine(new Vector2(x1, y1), new Vector2(x2, y2), c);
-            DrawLine(new Vector2(x2, y2), new Vector2(x3, y3), c);
-            DrawLine(new Vector2(x3, y3), new Vector2(x1, y1), c);
-        }
+                    // var perc = (float)-(x + 1f) / (float)(width) *
+                    //            (float)(y + 1f) / (float)(height); // horizontal
 
-        public void DrawRectangle(int x, int y, int w, int h, Gradient gradient)
-        {
-            HandleEmptyImage();
-
-            for (int _y = 0; _y < h; _y++)
-            {
-                for (int _x = 0; _x < w; _x++)
-                {
-                    var posX = x + _x;
-                    var posY = y + _y;
-                    if (posX < 0) posX = 0;
-                    if (posX >= width) posX = width - 1;
-                    if (posY < 0) posY = 0;
-                    if (posY >= height) posY = height - 1;
-
-                    var perc = (float)posX / (float)w;
-                    var c = Color.Lerp(gradient.from, gradient.to, perc);
-                    SetPixel(posX, posY, c);
+                    var c = Color.Lerp(from, to, perc);
+                    pixelArray.Add(c);
                 }
             }
-
-            float area = w * h;
-            System.Console.WriteLine(area + " m^2");
         }
 
-        public void DrawCircle(int x, int y, int r, Color color)
+        public void RadialGradient(Color from, Color to)
         {
-            HandleEmptyImage();
-
-            for (int _y = 0; _y <= r * 2; _y++)
+            for (int y = 0; y < height; y++)
             {
-                for (int _x = 0; _x <= r * 2; _x++)
+                for (int x = 0; x < width; x++)
                 {
-                    var posX = x + _x;
-                    var posY = y + _y;
-                    if (posX < 0) posX = 0;
-                    if (posX >= width) posX = width - 1;
-                    if (posY < 0) posY = 0;
-                    if (posY >= height) posY = height - 1;
+                    var mX = width / 2f;
+                    var mY = height / 2f;
 
-                    if ((_x - r) * (_x - r) + (_y - r) * (_y - r) <= r * r)
-                    {
-                        SetPixel(posX, posY, color);
-                    }
+                    var perc = 2f * (float)((x - mX) * (x - mX) + (y - mY) * (y - mY)) /
+                                    (float)(width * height);
+
+                    var c = Color.Lerp(from, to, perc);
+                    pixelArray.Add(c);
                 }
             }
         }
 
         #endregion
-
-        protected void HandleEmptyImage()
-        {
-            if (pixelArray.size == 0) Fill(Color.white);
-        }
-
     }
 }
