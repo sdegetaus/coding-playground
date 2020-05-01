@@ -3,6 +3,7 @@
 public class Program
 {
     static float ElapsedTime = 0.0f;
+    static float theta = 0.0f;
 
     static int WIDTH = 800;
     static int HEIGHT = 800;
@@ -15,6 +16,8 @@ public class Program
 
     static Matrix4x4 rotationMatX = Matrix4x4.zero;
 
+    static Vector3 vCamera = Vector3.zero;
+
     static Bitmap bitmap = new Bitmap(WIDTH, HEIGHT);
 
     static void Main(string[] args)
@@ -26,6 +29,11 @@ public class Program
             $@"{System.AppDomain.CurrentDomain.BaseDirectory}",
             "output.bmp"
         );
+
+        
+
+        bitmap.Save(path);
+        return;
 
         // Projection Matrix
         float near = 0.1f;
@@ -70,13 +78,13 @@ public class Program
     public static void Runtime()
     {
         bitmap.Fill(Color.black);
-        float theta = 1.0f * ElapsedTime;
+        theta = 1f * ElapsedTime;
 
         // rot z
         rotationMatZ[0, 0] = (float)Math.Cos(theta);
         rotationMatZ[0, 1] = (float)Math.Sin(theta);
         rotationMatZ[1, 0] = -(float)Math.Sin(theta);
-        rotationMatZ[1, 1] = -(float)Math.Cos(theta);
+        rotationMatZ[1, 1] = (float)Math.Cos(theta);
         rotationMatZ[2, 2] = 1.0f;
         rotationMatZ[3, 3] = 1.0f;
 
@@ -112,29 +120,40 @@ public class Program
             triTranslated.p1.Select(z: rotatedZX.p1.z + 2.0f);
             triTranslated.p2.Select(z: rotatedZX.p2.z + 2.0f);
 
-            // Vector3 normal = Vector3.zero;
-            // Vector3 line1 = Vector3.zero;
-            // Vector3 line2 = Vector3.zero;
+            Vector3 normal = Vector3.zero;
+            Vector3 line1 = Vector3.zero;
+            Vector3 line2 = Vector3.zero;
 
-            // line1.x = triTranslated.p1.x - triTranslated.p0.x;
-            // line1.y = triTranslated.p1.y - triTranslated.p0.y;
-            // line1.z = triTranslated.p1.z - triTranslated.p0.z;
+            line1.x = triTranslated.p1.x - triTranslated.p0.x;
+            line1.y = triTranslated.p1.y - triTranslated.p0.y;
+            line1.z = triTranslated.p1.z - triTranslated.p0.z;
 
-            // line2.x = triTranslated.p2.x - triTranslated.p0.x;
-            // line2.y = triTranslated.p2.y - triTranslated.p0.y;
-            // line2.z = triTranslated.p2.z - triTranslated.p0.z;
+            line2.x = triTranslated.p2.x - triTranslated.p0.x;
+            line2.y = triTranslated.p2.y - triTranslated.p0.y;
+            line2.z = triTranslated.p2.z - triTranslated.p0.z;
 
-            // normal.x = line1.y * line2.z - line1.z * line2.y;
-            // normal.y = line1.z * line2.x - line1.x * line2.z;
-            // normal.z = line1.x * line2.y - line1.y * line2.x;
+            normal.x = line1.y * line2.z - line1.z * line2.y;
+            normal.y = line1.z * line2.x - line1.x * line2.z;
+            normal.z = line1.x * line2.y - line1.y * line2.x;
 
-            // var l = (float)System.Math.Sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
-            // normal.x /= l;
-            // normal.y /= l;
-            // normal.z /= l;
+            var l = (float)System.Math.Sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+            normal.x /= l;
+            normal.y /= l;
+            normal.z /= l;
 
-            // if (normal.z < 0)
+            if (normal.x * (triTranslated.p0.x - vCamera.x) +
+                normal.y * (triTranslated.p0.y - vCamera.y) +
+                normal.z * (triTranslated.p0.z - vCamera.z) < 0)
             {
+
+                Vector3 lightDir = new Vector3(0, 0, -1.0f);
+                var nl = (float)System.Math.Sqrt(lightDir.x * lightDir.x + lightDir.y * lightDir.y + lightDir.z * lightDir.z);
+                lightDir.x /= l;
+                lightDir.y /= l;
+                lightDir.z /= l;
+
+                var dp = normal.x * lightDir.x + normal.y * lightDir.y + normal.z * lightDir.z;
+
                 // Project lines from 3D --> 2D
                 triProjected.p0 = MultiplyMatrixVector(triTranslated.p0, projMatrix);
                 triProjected.p1 = MultiplyMatrixVector(triTranslated.p1, projMatrix);
@@ -150,17 +169,18 @@ public class Program
                 triProjected.p2.Select(y: triProjected.p2.y + 1.0f);
 
                 triProjected.p0.Select(x: triProjected.p0.x * 0.5f * (float)(WIDTH));
-                triProjected.p0.Select(y: triProjected.p0.y * 0.5f * (float)(HEIGHT));
                 triProjected.p1.Select(x: triProjected.p1.x * 0.5f * (float)(WIDTH));
-                triProjected.p1.Select(y: triProjected.p1.y * 0.5f * (float)(HEIGHT));
                 triProjected.p2.Select(x: triProjected.p2.x * 0.5f * (float)(WIDTH));
+
+                triProjected.p0.Select(y: triProjected.p0.y * 0.5f * (float)(HEIGHT));
+                triProjected.p1.Select(y: triProjected.p1.y * 0.5f * (float)(HEIGHT));
                 triProjected.p2.Select(y: triProjected.p2.y * 0.5f * (float)(HEIGHT));
 
                 bitmap.DrawTriangle(
                     (int)triProjected.p0.x, (int)triProjected.p0.y,
                     (int)triProjected.p1.x, (int)triProjected.p1.y,
                     (int)triProjected.p2.x, (int)triProjected.p2.y,
-                    Color.white
+                    Color.yellow
                 );
             }
         }
