@@ -48,11 +48,24 @@ namespace CodingPlayground
 
         public void Fill(Color color)
         {
-            for (int y = 0; y < height; y++)
+            if (pixelArray.size == 0)
             {
-                for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
                 {
-                    pixelArray.Add(color);
+                    for (int x = 0; x < width; x++)
+                    {
+                        pixelArray.Add(color);
+                    }
+                }
+            }
+            else
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        SetPixel(x, y, color);
+                    }
                 }
             }
         }

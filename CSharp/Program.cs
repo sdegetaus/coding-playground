@@ -2,24 +2,30 @@
 
 public class Program
 {
+    static float ElapsedTime = 0.0f;
+
+    static int WIDTH = 512;
+    static int HEIGHT = 512;
+
+    static Mesh cubeMesh = Mesh.Cube;
+
+    static Matrix4x4 projMatrix = Matrix4x4.zero;
+
+    static Matrix4x4 matRotZ = Matrix4x4.zero;
+
+    static Matrix4x4 matRotX = Matrix4x4.zero;
+
+    static Bitmap bitmap = new Bitmap(WIDTH, HEIGHT);
+
     static void Main(string[] args)
     {
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
 
-        int WIDTH = 512;
-        int HEIGHT = 512;
-
         var path = System.IO.Path.Combine(
             @"C:\Users\minim\Desktop\image_output",
             "output.bmp"
         );
-
-        Bitmap bitmap = new Bitmap(WIDTH, HEIGHT);
-
-        bitmap.Fill(Color.black);
-
-        var cubeMesh = Mesh.Cube;
 
         // Projection Matrix
         float near = 0.1f;
@@ -28,7 +34,6 @@ public class Program
         float aspectRatio = (float)HEIGHT / (float)WIDTH;
         float fovRad = 1.0f / (float)Math.Tan(fov * 0.5f / 180f * Math.PI);
 
-        Matrix4x4 projMatrix = Matrix4x4.zero;
         projMatrix[0, 0] = aspectRatio * fovRad;
         projMatrix[1, 1] = fovRad;
         projMatrix[2, 2] = far / (far - near);
@@ -36,11 +41,37 @@ public class Program
         projMatrix[2, 3] = 1.0f;
         projMatrix[3, 3] = 0.0f;
 
-        Matrix4x4 matRotZ = Matrix4x4.zero;
-        Matrix4x4 matRotX = Matrix4x4.zero;
+        bitmap.Fill(Color.black);
 
-        float elapsedTime = 500.0f;
-        float theta = 1.0f * elapsedTime;
+        System.Console.WriteLine("Reading input...");
+        while (true)
+        {
+            var keyInfo = System.Console.ReadKey();
+
+            switch (keyInfo.Key)
+            {
+                case System.ConsoleKey.LeftArrow:
+                    ElapsedTime -= 1.0f;
+                    Runtime();
+                    break;
+                case System.ConsoleKey.RightArrow:
+                    ElapsedTime += 1.0f;
+                    Runtime();
+                    break;
+                case System.ConsoleKey.Escape:
+                    stopwatch.Stop();
+                    System.Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
+                    return;
+            }
+            bitmap.Save(path);
+        }
+
+    }
+
+    public static void Runtime()
+    {
+        bitmap.Fill(Color.black);
+        float theta = 1.0f * ElapsedTime;
 
         // rot z
         matRotZ[0, 0] = (float)Math.Cos(theta);
@@ -57,7 +88,6 @@ public class Program
         matRotX[2, 1] = -(float)Math.Sin(theta * 0.5f);
         matRotX[2, 2] = -(float)Math.Cos(theta * 0.5f);
         matRotX[3, 3] = 1f;
-
 
         for (int i = 0; i < cubeMesh.Count; i++)
         {
@@ -80,7 +110,6 @@ public class Program
             triTranslated[0] = triTranslated[0].With(z: triRotatedZX[0].z + 3.0f);
             triTranslated[1] = triTranslated[1].With(z: triRotatedZX[1].z + 3.0f);
             triTranslated[2] = triTranslated[2].With(z: triRotatedZX[2].z + 3.0f);
-
 
             triProjected[0] = MultiplyMatrixVector(triTranslated[0], projMatrix);
             triProjected[1] = MultiplyMatrixVector(triTranslated[1], projMatrix);
@@ -108,11 +137,6 @@ public class Program
                 Color.white
             );
         }
-
-        bitmap.Save(path);
-
-        stopwatch.Stop();
-        System.Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
     }
 
     public static Vector3 MultiplyMatrixVector(Vector3 input, Matrix4x4 matrix)
