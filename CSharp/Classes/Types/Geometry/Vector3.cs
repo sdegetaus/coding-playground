@@ -4,7 +4,7 @@ namespace CodingPlayground
     {
         #region Properties
 
-        public float x;
+        public float x { get; set; }
 
         public float y;
 
@@ -103,6 +103,13 @@ namespace CodingPlayground
         public Vector3 With(float? x = null, float? y = null, float? z = null)
         {
             return new Vector3(x ?? this.x, y ?? this.y, z ?? this.z);
+        }
+
+        public void Select(float? x = null, float? y = null, float? z = null)
+        {
+            this.x = x ?? this.x;
+            this.y = y ?? this.y;
+            this.z = z ?? this.z;
         }
 
         public override string ToString() => $"{x}, {y}, {z}";

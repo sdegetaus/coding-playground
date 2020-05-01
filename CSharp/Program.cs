@@ -4,16 +4,16 @@ public class Program
 {
     static float ElapsedTime = 0.0f;
 
-    static int WIDTH = 512;
-    static int HEIGHT = 512;
+    static int WIDTH = 800;
+    static int HEIGHT = 800;
 
     static Mesh cubeMesh = Mesh.Cube;
 
     static Matrix4x4 projMatrix = Matrix4x4.zero;
 
-    static Matrix4x4 matRotZ = Matrix4x4.zero;
+    static Matrix4x4 rotationMatZ = Matrix4x4.zero;
 
-    static Matrix4x4 matRotX = Matrix4x4.zero;
+    static Matrix4x4 rotationMatX = Matrix4x4.zero;
 
     static Bitmap bitmap = new Bitmap(WIDTH, HEIGHT);
 
@@ -51,21 +51,20 @@ public class Program
             switch (keyInfo.Key)
             {
                 case System.ConsoleKey.LeftArrow:
-                    ElapsedTime -= 1.0f;
+                    ElapsedTime -= 0.1f;
                     Runtime();
                     break;
                 case System.ConsoleKey.RightArrow:
-                    ElapsedTime += 1.0f;
+                    ElapsedTime += 0.1f;
                     Runtime();
                     break;
                 case System.ConsoleKey.Escape:
                     stopwatch.Stop();
-                    System.Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
+                    System.Console.WriteLine($"\nTime elapsed: {stopwatch.Elapsed}");
                     return;
             }
             bitmap.Save(path);
         }
-
     }
 
     public static void Runtime()
@@ -74,20 +73,20 @@ public class Program
         float theta = 1.0f * ElapsedTime;
 
         // rot z
-        matRotZ[0, 0] = (float)Math.Cos(theta);
-        matRotZ[0, 1] = (float)Math.Sin(theta);
-        matRotZ[1, 0] = -(float)Math.Sin(theta);
-        matRotZ[1, 1] = -(float)Math.Cos(theta);
-        matRotZ[2, 2] = 1f;
-        matRotZ[3, 3] = 1f;
+        rotationMatZ[0, 0] = (float)Math.Cos(theta);
+        rotationMatZ[0, 1] = (float)Math.Sin(theta);
+        rotationMatZ[1, 0] = -(float)Math.Sin(theta);
+        rotationMatZ[1, 1] = -(float)Math.Cos(theta);
+        rotationMatZ[2, 2] = 1.0f;
+        rotationMatZ[3, 3] = 1.0f;
 
         // rot x
-        matRotX[0, 0] = 1f;
-        matRotX[1, 1] = (float)Math.Cos(theta * 0.5f);
-        matRotX[1, 2] = (float)Math.Sin(theta * 0.5f);
-        matRotX[2, 1] = -(float)Math.Sin(theta * 0.5f);
-        matRotX[2, 2] = -(float)Math.Cos(theta * 0.5f);
-        matRotX[3, 3] = 1f;
+        rotationMatX[0, 0] = 1.0f;
+        rotationMatX[1, 1] = (float)Math.Cos(theta * 0.5f);
+        rotationMatX[1, 2] = (float)Math.Sin(theta * 0.5f);
+        rotationMatX[2, 1] = -(float)Math.Sin(theta * 0.5f);
+        rotationMatX[2, 2] = (float)Math.Cos(theta * 0.5f);
+        rotationMatX[3, 3] = 1.0f;
 
         for (int i = 0; i < cubeMesh.Count; i++)
         {
@@ -95,47 +94,75 @@ public class Program
             var triProjected = Triangle.zero;
             var triTranslated = Triangle.zero;
 
-            var triRotatedZ = Triangle.zero;
-            var triRotatedZX = Triangle.zero;
+            var rotatedTriZ = Triangle.zero;
+            var rotatedZX = Triangle.zero;
 
-            triRotatedZ[0] = MultiplyMatrixVector(tri[0], matRotZ);
-            triRotatedZ[1] = MultiplyMatrixVector(tri[1], matRotZ);
-            triRotatedZ[2] = MultiplyMatrixVector(tri[2], matRotZ);
+            rotatedTriZ.p0 = MultiplyMatrixVector(tri.p0, rotationMatZ);
+            rotatedTriZ.p1 = MultiplyMatrixVector(tri.p1, rotationMatZ);
+            rotatedTriZ.p2 = MultiplyMatrixVector(tri.p2, rotationMatZ);
 
-            triRotatedZX[0] = MultiplyMatrixVector(triRotatedZ[0], matRotX);
-            triRotatedZX[1] = MultiplyMatrixVector(triRotatedZ[1], matRotX);
-            triRotatedZX[2] = MultiplyMatrixVector(triRotatedZ[2], matRotX);
+            // Rotate in X-Axis
+            rotatedZX.p0 = MultiplyMatrixVector(rotatedTriZ.p0, rotationMatX);
+            rotatedZX.p1 = MultiplyMatrixVector(rotatedTriZ.p1, rotationMatX);
+            rotatedZX.p2 = MultiplyMatrixVector(rotatedTriZ.p2, rotationMatX);
 
-            triTranslated = triRotatedZX;
-            triTranslated[0] = triTranslated[0].With(z: triRotatedZX[0].z + 3.0f);
-            triTranslated[1] = triTranslated[1].With(z: triRotatedZX[1].z + 3.0f);
-            triTranslated[2] = triTranslated[2].With(z: triRotatedZX[2].z + 3.0f);
+            // Rotate into the Screen
+            triTranslated = rotatedZX;
+            triTranslated.p0.Select(z: rotatedZX.p0.z + 2.0f);
+            triTranslated.p1.Select(z: rotatedZX.p1.z + 2.0f);
+            triTranslated.p2.Select(z: rotatedZX.p2.z + 2.0f);
 
-            triProjected[0] = MultiplyMatrixVector(triTranslated[0], projMatrix);
-            triProjected[1] = MultiplyMatrixVector(triTranslated[1], projMatrix);
-            triProjected[2] = MultiplyMatrixVector(triTranslated[2], projMatrix);
+            // Vector3 normal = Vector3.zero;
+            // Vector3 line1 = Vector3.zero;
+            // Vector3 line2 = Vector3.zero;
 
-            // Scale into view
-            triProjected[0] = triProjected[0].With(x: triProjected[0].x + 1.0f);
-            triProjected[0] = triProjected[0].With(y: triProjected[0].y + 1.0f);
-            triProjected[1] = triProjected[1].With(x: triProjected[1].x + 1.0f);
-            triProjected[1] = triProjected[1].With(y: triProjected[1].y + 1.0f);
-            triProjected[2] = triProjected[2].With(x: triProjected[2].x + 1.0f);
-            triProjected[2] = triProjected[2].With(y: triProjected[2].y + 1.0f);
+            // line1.x = triTranslated.p1.x - triTranslated.p0.x;
+            // line1.y = triTranslated.p1.y - triTranslated.p0.y;
+            // line1.z = triTranslated.p1.z - triTranslated.p0.z;
 
-            triProjected[0] = triProjected[0].With(x: triProjected[0].x * 0.5f * (float)(WIDTH));
-            triProjected[0] = triProjected[0].With(y: triProjected[0].y * 0.5f * (float)(HEIGHT));
-            triProjected[1] = triProjected[1].With(x: triProjected[1].x * 0.5f * (float)(WIDTH));
-            triProjected[1] = triProjected[1].With(y: triProjected[1].y * 0.5f * (float)(HEIGHT));
-            triProjected[2] = triProjected[2].With(x: triProjected[2].x * 0.5f * (float)(WIDTH));
-            triProjected[2] = triProjected[2].With(y: triProjected[2].y * 0.5f * (float)(HEIGHT));
+            // line2.x = triTranslated.p2.x - triTranslated.p0.x;
+            // line2.y = triTranslated.p2.y - triTranslated.p0.y;
+            // line2.z = triTranslated.p2.z - triTranslated.p0.z;
 
-            bitmap.DrawTriangle(
-                (int)triProjected[0].x, (int)triProjected[0].y,
-                (int)triProjected[1].x, (int)triProjected[1].y,
-                (int)triProjected[2].x, (int)triProjected[2].y,
-                Color.white
-            );
+            // normal.x = line1.y * line2.z - line1.z * line2.y;
+            // normal.y = line1.z * line2.x - line1.x * line2.z;
+            // normal.z = line1.x * line2.y - line1.y * line2.x;
+
+            // var l = (float)System.Math.Sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+            // normal.x /= l;
+            // normal.y /= l;
+            // normal.z /= l;
+
+            // if (normal.z < 0)
+            {
+                // Project lines from 3D --> 2D
+                triProjected.p0 = MultiplyMatrixVector(triTranslated.p0, projMatrix);
+                triProjected.p1 = MultiplyMatrixVector(triTranslated.p1, projMatrix);
+                triProjected.p2 = MultiplyMatrixVector(triTranslated.p2, projMatrix);
+
+                // Scale into view
+                triProjected.p0.Select(x: triProjected.p0.x + 1.0f);
+                triProjected.p1.Select(x: triProjected.p1.x + 1.0f);
+                triProjected.p2.Select(x: triProjected.p2.x + 1.0f);
+
+                triProjected.p0.Select(y: triProjected.p0.y + 1.0f);
+                triProjected.p1.Select(y: triProjected.p1.y + 1.0f);
+                triProjected.p2.Select(y: triProjected.p2.y + 1.0f);
+
+                triProjected.p0.Select(x: triProjected.p0.x * 0.5f * (float)(WIDTH));
+                triProjected.p0.Select(y: triProjected.p0.y * 0.5f * (float)(HEIGHT));
+                triProjected.p1.Select(x: triProjected.p1.x * 0.5f * (float)(WIDTH));
+                triProjected.p1.Select(y: triProjected.p1.y * 0.5f * (float)(HEIGHT));
+                triProjected.p2.Select(x: triProjected.p2.x * 0.5f * (float)(WIDTH));
+                triProjected.p2.Select(y: triProjected.p2.y * 0.5f * (float)(HEIGHT));
+
+                bitmap.DrawTriangle(
+                    (int)triProjected.p0.x, (int)triProjected.p0.y,
+                    (int)triProjected.p1.x, (int)triProjected.p1.y,
+                    (int)triProjected.p2.x, (int)triProjected.p2.y,
+                    Color.white
+                );
+            }
         }
     }
 

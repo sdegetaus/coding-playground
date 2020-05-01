@@ -4,46 +4,46 @@ namespace CodingPlayground
     {
         #region Properties
 
-        private Vector3 p0;
+        public Vector3 p0;
 
-        private Vector3 p1;
+        public Vector3 p1;
 
-        private Vector3 p2;
+        public Vector3 p2;
 
-        public Vector3 this[int index]
-        {
-            get
-            {
-                switch (index)
-                {
-                    default:
-                        throw new System.NullReferenceException();
-                    case 0:
-                        return p0;
-                    case 1:
-                        return p1;
-                    case 2:
-                        return p2;
-                }
-            }
-            set
-            {
-                switch (index)
-                {
-                    default:
-                        throw new System.NullReferenceException();
-                    case 0:
-                        p0 = value;
-                        break;
-                    case 1:
-                        p1 = value;
-                        break;
-                    case 2:
-                        p2 = value;
-                        break;
-                }
-            }
-        }
+        // public Vector3 this[int index]
+        // {
+        //     get
+        //     {
+        //         switch (index)
+        //         {
+        //             default:
+        //                 throw new System.NullReferenceException();
+        //             case 0:
+        //                 return p0;
+        //             case 1:
+        //                 return p1;
+        //             case 2:
+        //                 return p2;
+        //         }
+        //     }
+        //     set
+        //     {
+        //         switch (index)
+        //         {
+        //             default:
+        //                 throw new System.NullReferenceException();
+        //             case 0:
+        //                 p0 = value;
+        //                 break;
+        //             case 1:
+        //                 p1 = value;
+        //                 break;
+        //             case 2:
+        //                 p2 = value;
+        //                 break;
+        //         }
+        //     }
+        // }
 
         #endregion
 
