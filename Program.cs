@@ -5,7 +5,7 @@ public class Program
     static float ElapsedTime = 0.0f;
     static float theta = 0.0f;
 
-    static Mesh cubeMesh = Mesh.Cube;
+    static Mesh cubeMesh;
 
     static Matrix4x4 projMatrix = Matrix4x4.zero;
 
@@ -31,7 +31,24 @@ public class Program
         // bitmap.FillTriangle(5, 5, 5, 95, 95, 5, Color.black);
 
         // bitmap.Save(path);
-        // return;
+
+        System.Console.BackgroundColor = System.ConsoleColor.Blue;
+        System.Console.Beep();
+        System.Console.CursorVisible = false;
+        System.Console.Title = "Hey";
+        System.Console.SetWindowSize(100, 100);
+
+        int c = 0;
+        while (c != 100)
+        {
+            System.Console.ReadKey();
+            System.Console.WriteLine(c);
+            c++;
+        }
+
+        return;
+
+        cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\spaceship.obj");
 
         // Projection Matrix
         float near = 0.1f;
@@ -100,22 +117,21 @@ public class Program
             var triTranslated = Triangle.zero;
 
             var rotatedTriZ = Triangle.zero;
-            var rotatedZX = Triangle.zero;
+            var triRotatedZX = Triangle.zero;
 
             rotatedTriZ.p0 = MultiplyMatrixVector(tri.p0, rotationMatZ);
             rotatedTriZ.p1 = MultiplyMatrixVector(tri.p1, rotationMatZ);
             rotatedTriZ.p2 = MultiplyMatrixVector(tri.p2, rotationMatZ);
 
             // Rotate in X-Axis
-            rotatedZX.p0 = MultiplyMatrixVector(rotatedTriZ.p0, rotationMatX);
-            rotatedZX.p1 = MultiplyMatrixVector(rotatedTriZ.p1, rotationMatX);
-            rotatedZX.p2 = MultiplyMatrixVector(rotatedTriZ.p2, rotationMatX);
+            triRotatedZX.p0 = MultiplyMatrixVector(rotatedTriZ.p0, rotationMatX);
+            triRotatedZX.p1 = MultiplyMatrixVector(rotatedTriZ.p1, rotationMatX);
+            triRotatedZX.p2 = MultiplyMatrixVector(rotatedTriZ.p2, rotationMatX);
 
-            // Rotate into the Screen
-            triTranslated = rotatedZX;
-            triTranslated.p0.Select(z: rotatedZX.p0.z + 2.0f);
-            triTranslated.p1.Select(z: rotatedZX.p1.z + 2.0f);
-            triTranslated.p2.Select(z: rotatedZX.p2.z + 2.0f);
+            triTranslated = triRotatedZX;
+            triTranslated.p0.Select(z: triRotatedZX.p0.z + 150.0f);
+            triTranslated.p1.Select(z: triRotatedZX.p1.z + 150.0f);
+            triTranslated.p2.Select(z: triRotatedZX.p2.z + 150.0f);
 
             Vector3 normal = Vector3.zero;
             Vector3 line1 = Vector3.zero;
@@ -142,7 +158,6 @@ public class Program
                 normal.y * (triTranslated.p0.y - vCamera.y) +
                 normal.z * (triTranslated.p0.z - vCamera.z) < 0)
             {
-
                 Vector3 lightDir = new Vector3(0, 0, -1.0f);
                 var nl = (float)System.Math.Sqrt(lightDir.x * lightDir.x + lightDir.y * lightDir.y + lightDir.z * lightDir.z);
                 lightDir.x /= l;
@@ -150,7 +165,6 @@ public class Program
                 lightDir.z /= l;
 
                 var dp = normal.x * lightDir.x + normal.y * lightDir.y + normal.z * lightDir.z;
-                System.Console.WriteLine(dp);
 
                 // Project lines from 3D --> 2D
                 triProjected.p0 = MultiplyMatrixVector(triTranslated.p0, projMatrix);
@@ -181,12 +195,12 @@ public class Program
                     Color.white * dp
                 );
 
-                // bitmap.DrawTriangle(
-                //     (int)triProjected.p0.x, (int)triProjected.p0.y,
-                //     (int)triProjected.p1.x, (int)triProjected.p1.y,
-                //     (int)triProjected.p2.x, (int)triProjected.p2.y,
-                //     Color.black
-                // );
+                bitmap.DrawTriangle(
+                    (int)triProjected.p0.x, (int)triProjected.p0.y,
+                    (int)triProjected.p1.x, (int)triProjected.p1.y,
+                    (int)triProjected.p2.x, (int)triProjected.p2.y,
+                    Color.red
+                );
             }
         }
 
