@@ -105,13 +105,13 @@ namespace Console3D
             if (delta.x < 0) da.x = -1; else if (delta.x > 0) da.x = 1;
             if (delta.y < 0) da.y = -1; else if (delta.y > 0) da.y = 1;
             if (delta.x < 0) db.x = -1; else if (delta.x > 0) db.x = 1;
-            int longest = Math.Abs((int)delta.x);
-            int shortest = Math.Abs((int)delta.y);
+            int longest = Math.Abs(delta.x);
+            int shortest = Math.Abs(delta.y);
 
-            if (!(longest > shortest))
+            if (longest > shortest == false)
             {
-                longest = Math.Abs((int)delta.y);
-                shortest = Math.Abs((int)delta.x);
+                longest = Math.Abs(delta.y);
+                shortest = Math.Abs(delta.x);
                 if (delta.y < 0) db.y = -1; else if (delta.y > 0) db.y = 1;
                 db.x = 0;
             }
@@ -143,61 +143,28 @@ namespace Console3D
         }
 
         public void FillTriangle(
-            Vector2 p0, Vector2 p1, Vector2 p2, Color c)
+            Vector2 a, Vector2 b, Vector2 c, Color color)
         {
-            // todo: improve
-            int x0 = p0.x;
-            int y0 = p0.y;
-            int x1 = p1.x;
-            int y1 = p1.y;
-            int x2 = p2.x;
-            int y2 = p2.y;
+            var min = new Vector2(Math.Min(Math.Min(a.x, b.x), c.x), Math.Min(Math.Min(a.y, b.y), c.y));
+            var max = new Vector2(Math.Max(Math.Max(a.x, b.x), c.x), Math.Max(Math.Max(a.y, b.y), c.y));
 
-            float area = 0.5f * (-y1 * x2 + y0 * (-x1 + x2) + x0 * (y1 - y2) + x1 * y2);
-
-            for (int _y = 0; _y < cWin.height; _y++)
+            var p = Vector2.zero;
+            for (p.y = min.y; p.y < max.y; p.y++)
             {
-                for (int _x = 0; _x < cWin.width; _x++)
+                for (p.x = min.x; p.x < max.x; p.x++)
                 {
-                    Vector2 pos = new Vector2(_x, _y);
+                    int w0 = Orient(b, c, p);
+                    int w1 = Orient(c, a, p);
+                    int w2 = Orient(a, b, p);
 
-                    if (pos.x < 0 ||
-                        pos.y < 0 ||
-                        pos.x >= cWin.width ||
-                        pos.y >= cWin.height)
+                    // Debug.Log($"{w0} | {w1} | {w2}");
+
+                    if (w0 >= 0 && w1 >= 0 && w2 >= 0)
                     {
-                        continue;
+                        SetPixel(p, color);
                     }
-
-                    float s = 1f / (2f * area) * (y0 * x2 - x0 * y2 + (y2 - y0) * pos.x + (x0 - x2) * pos.y);
-                    float t = 1f / (2f * area) * (x0 * y1 - y0 * x1 + (y0 - y1) * pos.x + (x1 - x0) * pos.y);
-
-                    if (s > 0f && t > 0f && 1f - s - t > 0f)
-                    {
-                        SetPixel(pos, c);
-                    }
-                    else { continue; }
                 }
             }
-
-            // Vector2 min = new Vector2(System.Math.Min(System.Math.Min(a.x, b.x), c.x), System.Math.Min(System.Math.Min(a.y, b.y), c.y));
-            // Vector2 max = new Vector2(System.Math.Max(System.Math.Max(a.x, b.x), c.x), System.Math.Max(System.Math.Max(a.y, b.y), c.y));
-
-            // var p = Vector2.zero;
-            // for (p.y = min.y; p.y < max.y; p.y++)
-            // {
-            //     for (p.x = min.x; p.x < max.x; p.x++)
-            //     {
-            //         int w0 = Orient(b, c, p);
-            //         int w1 = Orient(c, a, p);
-            //         int w2 = Orient(a, b, p);
-
-            //         if (w0 >= 0 && w1 >= 0 && w2 >= 0)
-            //         {
-            //             SetPixel(p, cColor, cChar);
-            //         }
-            //     }
-            // }
         }
 
         private int Orient(Vector2 a, Vector2 b, Vector2 c)

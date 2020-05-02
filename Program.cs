@@ -50,8 +50,13 @@ namespace Console3D
             runtimeWatch.Start();
 
             Mesh cubeMesh = Mesh.Cube;
-            float zoom = 4.0f;
-            // cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\spaceship.obj");
+            float zoom = 5.0f;
+            var fileLoaded = true;
+            // fileLoaded = cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\cone.obj");
+            if (!fileLoaded)
+            {
+                throw new System.IO.FileLoadException();
+            }
 
             #region Current Projection
 
@@ -143,9 +148,10 @@ namespace Console3D
                     triRotatedZX.p2 = MultiplyMatrixVector(rotatedTriZ.p2, rotationMatX);
 
                     triTranslated = triRotatedZX;
-                    triTranslated.p0.Select(z: triRotatedZX.p0.z + zoom);
-                    triTranslated.p1.Select(z: triRotatedZX.p1.z + zoom);
-                    triTranslated.p2.Select(z: triRotatedZX.p2.z + zoom);
+                    triTranslated.p0.z = triRotatedZX.p0.z + zoom;
+                    triTranslated.p0.z = triRotatedZX.p0.z + zoom;
+                    triTranslated.p1.z = triRotatedZX.p1.z + zoom;
+                    triTranslated.p2.z = triRotatedZX.p2.z + zoom;
 
                     Vector3 normal = Vector3.zero;
                     Vector3 line1 = Vector3.zero;
@@ -186,34 +192,34 @@ namespace Console3D
                         triProjected.p2 = MultiplyMatrixVector(triTranslated.p2, projMatrix);
 
                         // Scale into view
-                        triProjected.p0.Select(x: triProjected.p0.x + 1.0f);
-                        triProjected.p1.Select(x: triProjected.p1.x + 1.0f);
-                        triProjected.p2.Select(x: triProjected.p2.x + 1.0f);
+                        triProjected.p0.x = triProjected.p0.x + 1.0f;
+                        triProjected.p1.x = triProjected.p1.x + 1.0f;
+                        triProjected.p2.x = triProjected.p2.x + 1.0f;
 
-                        triProjected.p0.Select(y: triProjected.p0.y + 1.0f);
-                        triProjected.p1.Select(y: triProjected.p1.y + 1.0f);
-                        triProjected.p2.Select(y: triProjected.p2.y + 1.0f);
+                        triProjected.p0.y = triProjected.p0.y + 1.0f;
+                        triProjected.p1.y = triProjected.p1.y + 1.0f;
+                        triProjected.p2.y = triProjected.p2.y + 1.0f;
 
-                        triProjected.p0.Select(x: triProjected.p0.x * 0.5f * (float)(WIDTH));
-                        triProjected.p1.Select(x: triProjected.p1.x * 0.5f * (float)(WIDTH));
-                        triProjected.p2.Select(x: triProjected.p2.x * 0.5f * (float)(WIDTH));
+                        triProjected.p0.x = triProjected.p0.x * 0.5f * (float)(WIDTH);
+                        triProjected.p1.x = triProjected.p1.x * 0.5f * (float)(WIDTH);
+                        triProjected.p2.x = triProjected.p2.x * 0.5f * (float)(WIDTH);
 
-                        triProjected.p0.Select(y: triProjected.p0.y * 0.5f * (float)(HEIGHT));
-                        triProjected.p1.Select(y: triProjected.p1.y * 0.5f * (float)(HEIGHT));
-                        triProjected.p2.Select(y: triProjected.p2.y * 0.5f * (float)(HEIGHT));
+                        triProjected.p0.y = triProjected.p0.y * 0.5f * (float)(HEIGHT);
+                        triProjected.p1.y = triProjected.p1.y * 0.5f * (float)(HEIGHT);
+                        triProjected.p2.y = triProjected.p2.y * 0.5f * (float)(HEIGHT);
 
                         if (loops % 2 != 0)
                         {
                             c3D.FillTriangle(
-                                triProjected.p0,
-                                triProjected.p1,
                                 triProjected.p2,
+                                triProjected.p1,
+                                triProjected.p0,
                                 Color.white * dp
                             );
 
                             c3D.DrawTriangle(
-                                triProjected.p0,
                                 triProjected.p1,
+                                triProjected.p0,
                                 triProjected.p2,
                                 Color.black
                             );
