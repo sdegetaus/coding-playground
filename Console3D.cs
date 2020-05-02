@@ -7,9 +7,7 @@ namespace Console3D
 {
     public class Console3D
     {
-        private readonly IntPtr stdOutputHandle = Native.GetStdHandle(-11);
-        private readonly IntPtr stdInputHandle = Native.GetStdHandle(-10);
-        private Native.CharInfo[] CharInfoBuffer { get; set; }
+        private Native.CHAR_INFO[] CharInfoBuffer { get; set; }
         private SafeFileHandle sFileHandle { get; set; }
         private ConsoleColor backgroundColor { get; set; }
         private ConsoleWindow cWin;
@@ -20,7 +18,7 @@ namespace Console3D
 
             backgroundColor = ConsoleColor.DarkRed;
 
-            SetFont(stdOutputHandle, 2, 2);
+            SetFont(Native.stdOutputHandle, 2, 2);
 
             sFileHandle = Native.CreateFile(
                "CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero
@@ -28,10 +26,10 @@ namespace Console3D
 
             if (!sFileHandle.IsInvalid)
             {
-                CharInfoBuffer = new Native.CharInfo[window.width * window.height];
+                CharInfoBuffer = new Native.CHAR_INFO[window.width * window.height];
             }
 
-            Native.SetConsoleMode(stdInputHandle, 0x0080);
+            Native.SetConsoleMode(Native.stdInputHandle, 0x0080);
 
             // FillTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Light);
             // DrawTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Full);
@@ -39,12 +37,12 @@ namespace Console3D
 
         public void ClearBuffer()
         {
-            CharInfoBuffer = new Native.CharInfo[cWin.width * cWin.height];
+            CharInfoBuffer = new Native.CHAR_INFO[cWin.width * cWin.height];
         }
 
         public bool Blit()
         {
-            var rect = new Native.SmallRect()
+            var rect = new Native.SMALL_RECT()
             {
                 Left = 0,
                 Top = 0,
@@ -53,12 +51,12 @@ namespace Console3D
             };
 
             return Native.WriteConsoleOutputW(sFileHandle, CharInfoBuffer,
-                new Native.Coord()
+                new Native.COORD()
                 {
                     X = (short)cWin.width,
                     Y = (short)cWin.height
                 },
-                new Native.Coord()
+                new Native.COORD()
                 {
                     X = 0,
                     Y = 0

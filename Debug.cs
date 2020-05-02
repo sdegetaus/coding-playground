@@ -1,11 +1,9 @@
-// TODO: research how to make writing async
+// TODO: research how to make writing async / make class faster
 
 using System;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Console3D.Collections;
 
 namespace Console3D
 {

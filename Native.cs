@@ -1,3 +1,6 @@
+// Base code taken from: 
+// https://github.com/ollelogdahl/ConsoleGameEngine
+
 using System;
 using System.IO;
 using Microsoft.Win32.SafeHandles;
@@ -5,11 +8,25 @@ using System.Runtime.InteropServices;
 
 namespace Console3D
 {
-    public class Native
+    internal class Native
     {
+        public static readonly IntPtr stdOutputHandle = GetStdHandle(-11);
+        public static readonly IntPtr stdInputHandle = GetStdHandle(-10);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern short GetAsyncKeyState(Int32 vKey);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern short GetKeyState(Int32 vKey);
+
+        // [DllImport("kernel32.dll", SetLastError = true)]
+        // public static extern short ReadConsoleInput(
+        // // IntPtr hConsoleInput,
+        // // INPUT_RECORD lpBuffer,
+        // // int nLength,
+        // // int lpNumberOfEventsRead
+        // );
+
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetCursorPos(out POINT vKey);
@@ -30,27 +47,33 @@ namespace Console3D
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern SafeFileHandle CreateFile(
-                    string fileName,
-                    [MarshalAs(UnmanagedType.U4)] uint fileAccess,
-                    [MarshalAs(UnmanagedType.U4)] uint fileShare,
-                    IntPtr securityAttributes,
-                    [MarshalAs(UnmanagedType.U4)] FileMode creationDisposition,
-                    [MarshalAs(UnmanagedType.U4)] int flags,
-                IntPtr template);
+            string fileName,
+
+            [MarshalAs(UnmanagedType.U4)]
+            uint fileAccess,
+
+            [MarshalAs(UnmanagedType.U4)]
+            uint fileShare,
+
+            IntPtr securityAttributes,
+
+            [MarshalAs(UnmanagedType.U4)]
+            FileMode creationDisposition,
+
+            [MarshalAs(UnmanagedType.U4)]
+            int flags,
+
+            IntPtr template
+        );
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool WriteConsoleOutputW(
             SafeFileHandle hConsoleOutput,
-            CharInfo[] lpBuffer,
-            Coord dwBufferSize,
-            Coord dwBufferCoord,
-        ref SmallRect lpWriteRegion);
-
-        // [DllImport("kernel32.dll", SetLastError = true)]
-        // public static extern bool GetConsoleScreenBufferInfoEx(
-        //     IntPtr hConsoleOutput,
-        //     ref CONSOLE_SCREEN_BUFFER_INFO_EX csbe
-        // );
+            CHAR_INFO[] lpBuffer,
+            COORD dwBufferSize,
+            COORD dwBufferCoord,
+            ref SMALL_RECT lpWriteRegion
+        );
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern Int32 SetCurrentConsoleFontEx(
@@ -75,11 +98,11 @@ namespace Console3D
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct Coord
+        public struct COORD
         {
             public short X;
             public short Y;
-            public Coord(short x, short y)
+            public COORD(short x, short y)
             {
                 this.X = x;
                 this.Y = y;
@@ -87,7 +110,7 @@ namespace Console3D
         };
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct Rect
+        public struct RECT
         {
             public int Left;
             public int Top;
@@ -96,7 +119,7 @@ namespace Console3D
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct SmallRect
+        public struct SMALL_RECT
         {
             public short Left;
             public short Top;
@@ -104,84 +127,44 @@ namespace Console3D
             public short Bottom;
         }
 
+        // [StructLayout(LayoutKind.Explicit)]
+        // public struct INPUT_RECORD
+        // {
+        //     [FieldOffset(0)]
+        //     public short EventType;
+        // }
+
         [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
-        public struct CharInfo
+        public struct CHAR_INFO
         {
-            [FieldOffset(0)] public char UnicodeChar;
-            [FieldOffset(0)] public byte AsciiChar;
-            [FieldOffset(2)] public short Attributes;
-        }
+            [FieldOffset(0)]
+            public char UnicodeChar;
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct ColorRef
-        {
-            internal uint ColorDWORD;
+            [FieldOffset(0)]
+            public byte AsciiChar;
 
-            internal ColorRef(Color color)
-            {
-                ColorDWORD = (uint)color.r + (((uint)color.g) << 8) + (((uint)color.b) << 16);
-            }
-
-            internal ColorRef(uint r, uint g, uint b)
-            {
-                ColorDWORD = r + (g << 8) + (b << 16);
-            }
-
-            internal Color GetColor()
-            {
-                return new Color((int)(0x000000FFU & ColorDWORD),
-                   (int)(0x0000FF00U & ColorDWORD) >> 8, (int)(0x00FF0000U & ColorDWORD) >> 16);
-            }
-
-            internal void SetColor(Color color)
-            {
-                ColorDWORD = (uint)color.r + (((uint)color.g) << 8) + (((uint)color.b) << 16);
-            }
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct CONSOLE_SCREEN_BUFFER_INFO_EX
-        {
-            public int cbSize;
-            public Coord dwSize;
-            public Coord dwCursorPosition;
-            public short wAttributes;
-            public SmallRect srWindow;
-            public Coord dwMaximumWindowSize;
-
-            public ushort wPopupAttributes;
-            public bool bFullscreenSupported;
-
-            internal ColorRef black;
-            internal ColorRef darkBlue;
-            internal ColorRef darkGreen;
-            internal ColorRef darkCyan;
-            internal ColorRef darkRed;
-            internal ColorRef darkMagenta;
-            internal ColorRef darkYellow;
-            internal ColorRef gray;
-            internal ColorRef darkGray;
-            internal ColorRef blue;
-            internal ColorRef green;
-            internal ColorRef cyan;
-            internal ColorRef red;
-            internal ColorRef magenta;
-            internal ColorRef yellow;
-            internal ColorRef white;
+            [FieldOffset(2)]
+            public short Attributes;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct CONSOLE_FONT_INFO_EX
         {
             public uint cbSize;
+
             public uint nFont;
-            public Coord dwFontSize;
+
+            public COORD dwFontSize;
+
             public int FontFamily;
+
             public int FontWeight;
 
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
             public string FaceName;
         }
+
+
 
         #endregion
     }

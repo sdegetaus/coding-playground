@@ -29,5 +29,7 @@ namespace Console3D
             Console.Title = $"{windowBaseTitle} (FPS: {fps.ToString("0.00")})";
         }
 
+        public static bool IsFocused() => Native.GetConsoleWindow() == Native.GetForegroundWindow();
+
     }
 }

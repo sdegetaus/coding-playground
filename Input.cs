@@ -4,22 +4,41 @@ namespace Console3D
 {
     public static class Input
     {
-        public static bool GetKey(ConsoleKey key)
+        // TODO: unfinished, not working properly.
+        // for more info: https://www.cplusplus.com/forum/windows/6632/#msg30578
+
+        private static short GetKeyState(ConsoleKey key)
         {
-            short s = Native.GetAsyncKeyState((int)key);
-            return (s & 0x8000) > 0 && ConsoleFocused();
+            return Native.GetKeyState((int)key);
         }
 
         public static bool GetKeyDown(ConsoleKey key)
         {
-            int s = Convert.ToInt32(Native.GetAsyncKeyState((int)key));
-            return (s == -32767) && ConsoleFocused();
+            short s = Native.GetAsyncKeyState((int)key);
+            return s == -32767 && s != -32768 && ConsoleWindow.IsFocused();
         }
 
-        private static bool ConsoleFocused()
+        public static bool GetKey(ConsoleKey key)
         {
-            return Native.GetConsoleWindow() == Native.GetForegroundWindow();
+            short s = Native.GetAsyncKeyState((int)key);
+            return (s & 0x8000) > 0 && ConsoleWindow.IsFocused();
         }
+
+        public static bool GetKeyUp(ConsoleKey key)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public static bool DebugKeys(ConsoleKey key)
+        {
+            // int s = Native.GetKeyState((int)key);
+            // Debug.Log(s);
+            return false;
+            // return (s & 0x8000) > 0 && ConsoleWindow.IsFocused();
+        }
+
+
 
     }
 }

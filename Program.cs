@@ -16,8 +16,6 @@ namespace Console3D
 
         private static Stopwatch runtimeWatch;
 
-        // private static Stopwatch loopWatch;
-
         private static Console3D c3D;
         private static ConsoleWindow cWin;
 
@@ -45,18 +43,19 @@ namespace Console3D
 
         static void Run()
         {
+
+
             int loops = 0;
             runtimeWatch = new Stopwatch();
             runtimeWatch.Start();
+
 
             Mesh cubeMesh = Mesh.Cube;
             float zoom = 5.0f;
             var fileLoaded = true;
             // fileLoaded = cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\cone.obj");
-            if (!fileLoaded)
-            {
-                throw new System.IO.FileLoadException();
-            }
+            if (!fileLoaded) throw new System.IO.FileLoadException();
+
 
             #region Current Projection
 
@@ -83,35 +82,33 @@ namespace Console3D
 
             #endregion
 
+            // bool IsPaused = false;
+
             while (true)
             {
-                // loopWatch = new Stopwatch();
-                // loopWatch.Start();
 
+                if (Input.GetKeyDown(ConsoleKey.D))
+                {
+                    Debug.Log("Down");
+                }
+
+                if (Input.GetKey(ConsoleKey.A))
+                {
+                    Debug.Log("aaa");
+                }
+
+                // if (Input.GetKeyUp(ConsoleKey.U))
+                // {
+                //     Debug.Log("Up");
+                // }
+
+                if (Input.DebugKeys(ConsoleKey.Spacebar))
+                {
+                    Debug.Log($"P");
+                }
+
+                // udpate theta (used for rotation)
                 theta = 2.0f * (float)runtimeWatch.Elapsed.TotalSeconds;
-
-                // if (Input.GetKey(ConsoleKey.A))
-                // {
-                //     Debug.Log("o");
-                // }
-
-                // if (Input.GetKeyDown(ConsoleKey.A))
-                // {
-                //     Debug.Log("hell");
-                // }
-
-                // var keyInfo = System.Console.ReadKey();
-                // switch (keyInfo.Key)
-                // {
-                //     case System.ConsoleKey.LeftArrow:
-                //         elapsedTime -= 0.1f;
-                //         break;
-                //     case System.ConsoleKey.RightArrow:
-                //         elapsedTime += 0.1f;
-                //         break;
-                //     case System.ConsoleKey.Escape:
-                //         return;
-                // }
 
                 // rot z
                 rotationMatZ[0, 0] = (float)Math.Cos(theta);
@@ -224,7 +221,6 @@ namespace Console3D
                                 Color.black
                             );
                         }
-
                     }
                 }
 
@@ -237,14 +233,10 @@ namespace Console3D
                     c3D.Blit();
                 }
 
-                loops++;
-                // loopWatch.Stop();
-
-                if (loops % 10 == 0)
+                if (++loops % 10 == 0)
                 {
                     cWin.UpdateTitle((float)(loops / runtimeWatch.Elapsed.TotalSeconds));
                 }
-
             }
         }
 
