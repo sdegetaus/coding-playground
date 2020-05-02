@@ -24,30 +24,28 @@
 
 //     static void Main(string[] args)
 //     {
-//         var path = System.IO.Path.Combine(
-//             $@"{System.AppDomain.CurrentDomain.BaseDirectory}",
-//             "output.bmp"
-//         );
+//         // var path = System.IO.Path.Combine(
+//         //     $@"{System.AppDomain.CurrentDomain.BaseDirectory}",
+//         //     "output.bmp"
+//         // );
 
-//         Console.Clear();
-//         Console.BackgroundColor = ConsoleColor.Blue;
-//         Console.CursorVisible = false;
-//         Console.Title = "Console 3D Engine";
-//         System.Console.WriteLine(Console.LargestWindowWidth);
-//         System.Console.WriteLine(Console.LargestWindowHeight);
-//         Console.BufferWidth = 400;
-//         Console.BufferHeight = 400;
-//         Console.SetWindowSize(100, 100);
+//         // Console.Clear();
+//         // Console.BackgroundColor = ConsoleColor.Blue;
+//         // Console.CursorVisible = false;
+//         // Console.Title = "Console 3D Engine";
+//         // System.Console.WriteLine(Console.LargestWindowWidth);
+//         // System.Console.WriteLine(Console.LargestWindowHeight);
+//         // Console.BufferWidth = 400;
+//         // Console.BufferHeight = 400;
+//         // Console.SetWindowSize(100, 100);
 
-//         int c = 0;
-//         while (c != 100)
-//         {
-//             Console.ReadKey();
-//             Console.WriteLine(c);
-//             c++;
-//         }
-
-//         return;
+//         // int c = 0;
+//         // while (c != 100)
+//         // {
+//         //     Console.ReadKey();
+//         //     Console.WriteLine(c);
+//         //     c++;
+//         // }
 
 //         cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\spaceship.obj");
 

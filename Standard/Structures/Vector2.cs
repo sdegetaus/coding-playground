@@ -2,8 +2,15 @@ namespace Console3D
 {
     public struct Vector2
     {
-        public int x;
-        public int y;
+        public float x;
+
+        public float y;
+
+        public Vector2(float x, float y)
+        {
+            this.x = x;
+            this.y = y;
+        }
 
         public Vector2(int x, int y)
         {
@@ -12,6 +19,11 @@ namespace Console3D
         }
 
         public override string ToString() => $"{x}, {y}";
+
+        public static Vector2 zero
+        {
+            get => new Vector2(0, 0);
+        }
 
         public static float Distance(Vector2 pos1, Vector2 pos2)
         {
@@ -51,5 +63,7 @@ namespace Console3D
             int y = (int)(pos.y * factor);
             return new Vector2(x, y);
         }
+
+        public static implicit operator Vector2(Vector3 v3) => new Vector2(v3.x, v3.y);
     }
 }

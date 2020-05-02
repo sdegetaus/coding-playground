@@ -53,7 +53,7 @@ namespace Console3D
 
         public void SetPixel(Vector2 pos, Color color)
         {
-            pixelArray.SetPixel(pos.y * height + pos.x, color);
+            // pixelArray.SetPixel(()pos.y * height + pos.x, color);
         }
 
         public void Fill(int x, int y, int w, int h, Color color)
@@ -96,7 +96,7 @@ namespace Console3D
                     continue;
                 }
 
-                SetPixel(finalPos.x, finalPos.y, color);
+                // SetPixel(finalPos.x, finalPos.y, color);
             }
         }
 
