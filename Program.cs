@@ -208,16 +208,14 @@ namespace Console3D
                                 triProjected.p0,
                                 triProjected.p1,
                                 triProjected.p2,
-                                ConsoleColor.Red, // x dp
-                                ConsoleChar.Full
+                                Color.white * dp
                             );
 
                             c3D.DrawTriangle(
                                 triProjected.p0,
                                 triProjected.p1,
                                 triProjected.p2,
-                                ConsoleColor.White,
-                                ConsoleChar.Full
+                                Color.black
                             );
                         }
 
@@ -261,6 +259,5 @@ namespace Console3D
 
             return output;
         }
-
     }
 }

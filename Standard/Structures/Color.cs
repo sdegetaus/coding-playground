@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+
 namespace Console3D
 {
     public struct Color
@@ -113,7 +116,7 @@ namespace Console3D
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         public Color Invert() => new Color((byte)~r, (byte)~g, (byte)~b);
 
@@ -151,6 +154,35 @@ namespace Console3D
             new Color(r ?? this.r, g ?? this.g, b ?? this.b, a ?? this.a);
 
         public byte[] ToBGR() => new byte[] { (byte)this.b, (byte)this.g, (byte)this.r };
+
+        public CColor ToCColor()
+        {
+            float luminance = 0.2987f * (r / 255f) + 0.5870f * (g / 255f) + 0.1140f * (b / 255f);
+            int luminanceScale = (int)(luminance * 13.0f);
+
+            CColor c = CColor.empty;
+
+            switch (luminanceScale)
+            {
+                case 0: c.bg = ConsoleColor.Black; c.fg = ConsoleColor.Black; c.sym = PixelSymbol.SOLID; break;
+
+                case 1: c.bg = ConsoleColor.Black; c.fg = ConsoleColor.DarkGray; c.sym = PixelSymbol.QUARTER; break;
+                case 2: c.bg = ConsoleColor.Black; c.fg = ConsoleColor.DarkGray; c.sym = PixelSymbol.HALF; break;
+                case 3: c.bg = ConsoleColor.Black; c.fg = ConsoleColor.DarkGray; c.sym = PixelSymbol.THREE_QUARTERS; break;
+                case 4: c.bg = ConsoleColor.Black; c.fg = ConsoleColor.DarkGray; c.sym = PixelSymbol.SOLID; break;
+
+                case 5: c.bg = ConsoleColor.DarkGray; c.fg = ConsoleColor.Gray; c.sym = PixelSymbol.QUARTER; break;
+                case 6: c.bg = ConsoleColor.DarkGray; c.fg = ConsoleColor.Gray; c.sym = PixelSymbol.HALF; break;
+                case 7: c.bg = ConsoleColor.DarkGray; c.fg = ConsoleColor.Gray; c.sym = PixelSymbol.THREE_QUARTERS; break;
+                case 8: c.bg = ConsoleColor.DarkGray; c.fg = ConsoleColor.Gray; c.sym = PixelSymbol.SOLID; break;
+
+                case 9: c.bg = ConsoleColor.Gray; c.fg = ConsoleColor.White; c.sym = PixelSymbol.QUARTER; break;
+                case 10: c.bg = ConsoleColor.Gray; c.fg = ConsoleColor.White; c.sym = PixelSymbol.HALF; break;
+                case 11: c.bg = ConsoleColor.Gray; c.fg = ConsoleColor.White; c.sym = PixelSymbol.THREE_QUARTERS; break;
+                case 12: c.bg = ConsoleColor.Gray; c.fg = ConsoleColor.White; c.sym = PixelSymbol.SOLID; break;
+            }
+            return c;
+        }
 
         public override string ToString() => $"R: {r}, G: {g}, B: {b}";
 

@@ -83,18 +83,20 @@ namespace Console3D
             return 0;
         }
 
-        public void SetPixel(Vector2 p, ConsoleColor cColor, ConsoleChar cChar)
+        public void SetPixel(Vector2 p, Color color)
         {
             // check boundaries
             if (p.x >= cWin.width || p.y >= cWin.height || p.x < 0 || p.y < 0) return;
-
             int i = p.y * cWin.width + p.x;
-            CharInfoBuffer[i].Attributes = (short)((int)cColor | ((int)backgroundColor << 4));
-            CharInfoBuffer[i].UnicodeChar = (char)cChar;
+
+            var cColor = color.ToCColor();
+
+            CharInfoBuffer[i].Attributes = (short)((int)cColor.fg | ((int)cColor.bg << 4));
+            CharInfoBuffer[i].UnicodeChar = (char)cColor.sym;
         }
 
         public void DrawLine(
-            Vector2 p0, Vector2 p1, ConsoleColor cColor, ConsoleChar cChar)
+            Vector2 p0, Vector2 p1, Color c)
         {
             var delta = p1 - p0;
             Vector2 da = Vector2.zero;
@@ -118,7 +120,7 @@ namespace Console3D
             var p = new Vector2(p0.x, p0.y);
             for (int i = 0; i <= longest; i++)
             {
-                SetPixel(p, cColor, cChar);
+                SetPixel(p, c);
                 numerator += shortest;
                 if (!(numerator < longest))
                 {
@@ -133,15 +135,15 @@ namespace Console3D
         }
 
         public void DrawTriangle(
-            Vector2 p0, Vector2 p1, Vector2 p2, ConsoleColor cColor, ConsoleChar cChar)
+            Vector2 p0, Vector2 p1, Vector2 p2, Color c)
         {
-            DrawLine(p0, p1, cColor, cChar);
-            DrawLine(p1, p2, cColor, cChar);
-            DrawLine(p2, p0, cColor, cChar);
+            DrawLine(p0, p1, c);
+            DrawLine(p1, p2, c);
+            DrawLine(p2, p0, c);
         }
 
         public void FillTriangle(
-            Vector2 p0, Vector2 p1, Vector2 p2, ConsoleColor cColor, ConsoleChar cChar)
+            Vector2 p0, Vector2 p1, Vector2 p2, Color c)
         {
             // todo: improve
             int x0 = p0.x;
@@ -172,7 +174,7 @@ namespace Console3D
 
                     if (s > 0f && t > 0f && 1f - s - t > 0f)
                     {
-                        SetPixel(pos, cColor, cChar);
+                        SetPixel(pos, c);
                     }
                     else { continue; }
                 }

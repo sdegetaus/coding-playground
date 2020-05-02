@@ -1,11 +1,11 @@
 namespace Console3D
 {
-    public enum ConsoleChar
+    public enum PixelSymbol
     {
-        Null = 0x0000,
-        Full = 0x2588,
-        Dark = 0x2593,
-        Medium = 0x2592,
-        Light = 0x2591,
+        NULL = 0x0000,
+        QUARTER = 0x2591,
+        HALF = 0x2592,
+        THREE_QUARTERS = 0x2593,
+        SOLID = 0x2588,
     }
 }
