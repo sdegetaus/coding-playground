@@ -35,6 +35,11 @@ namespace Console3D
             // DrawTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Full);
         }
 
+        internal Native.CHAR_INFO[] GetCharInfoBuffer()
+        {
+            return CharInfoBuffer;
+        }
+
         public void ClearBuffer()
         {
             CharInfoBuffer = new Native.CHAR_INFO[cWin.width * cWin.height];

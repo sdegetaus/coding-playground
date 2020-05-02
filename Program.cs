@@ -49,7 +49,7 @@ namespace Console3D
 
 
             Mesh cubeMesh = Mesh.Cube;
-            float zoom = 5.0f;
+            float zoom = 3.0f;
             var fileLoaded = true;
             // fileLoaded = cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\cone.obj");
             if (!fileLoaded) throw new System.IO.FileLoadException();
@@ -89,6 +89,14 @@ namespace Console3D
                 {
                     IsPaused = !IsPaused;
                     Debug.Log($"IsPaused: {IsPaused}");
+                    continue;
+                }
+
+                if (Input.GetKeyDown(ConsoleKey.R))
+                {
+                    Debug.Log($"Render");
+                    var bm = new Bitmap(WIDTH, HEIGHT);
+                    bm.Render(c3D);
                     continue;
                 }
 

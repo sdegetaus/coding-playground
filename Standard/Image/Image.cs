@@ -39,6 +39,27 @@ namespace Console3D
 
         #region Methods
 
+        internal void Render(Console3D c3D)
+        {
+            var buffer = c3D.GetCharInfoBuffer();
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int i = y * width + x;
+                    Color color = new Color(buffer[i].Attributes << 4);
+                    SetPixel(x, y, color);
+                }
+            }
+
+            var filename = System.IO.Path.Combine(
+                $@"{System.AppDomain.CurrentDomain.BaseDirectory}",
+                "output.bmp"
+            );
+
+            Save(filename);
+        }
+
         public abstract void Save(string savePath);
 
         public Color GetPixel(int x, int y)
