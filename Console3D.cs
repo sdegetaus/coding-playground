@@ -7,9 +7,9 @@ namespace Console3D
 {
     public class Console3D
     {
-        private readonly IntPtr stdOutputHandle = NativeMethods.GetStdHandle(-11);
-        private readonly IntPtr stdInputHandle = NativeMethods.GetStdHandle(-10);
-        private NativeMethods.CharInfo[] CharInfoBuffer { get; set; }
+        private readonly IntPtr stdOutputHandle = Native.GetStdHandle(-11);
+        private readonly IntPtr stdInputHandle = Native.GetStdHandle(-10);
+        private Native.CharInfo[] CharInfoBuffer { get; set; }
         private SafeFileHandle sFileHandle { get; set; }
         private ConsoleColor backgroundColor { get; set; }
         private ConsoleWindow cWin;
@@ -22,16 +22,16 @@ namespace Console3D
 
             SetFont(stdOutputHandle, 2, 2);
 
-            sFileHandle = NativeMethods.CreateFile(
+            sFileHandle = Native.CreateFile(
                "CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero
             );
 
             if (!sFileHandle.IsInvalid)
             {
-                CharInfoBuffer = new NativeMethods.CharInfo[window.width * window.height];
+                CharInfoBuffer = new Native.CharInfo[window.width * window.height];
             }
 
-            NativeMethods.SetConsoleMode(stdInputHandle, 0x0080);
+            Native.SetConsoleMode(stdInputHandle, 0x0080);
 
             // FillTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Light);
             // DrawTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Full);
@@ -39,12 +39,12 @@ namespace Console3D
 
         public void ClearBuffer()
         {
-            CharInfoBuffer = new NativeMethods.CharInfo[cWin.width * cWin.height];
+            CharInfoBuffer = new Native.CharInfo[cWin.width * cWin.height];
         }
 
         public bool Blit()
         {
-            var rect = new NativeMethods.SmallRect()
+            var rect = new Native.SmallRect()
             {
                 Left = 0,
                 Top = 0,
@@ -52,13 +52,13 @@ namespace Console3D
                 Bottom = (short)cWin.height
             };
 
-            return NativeMethods.WriteConsoleOutputW(sFileHandle, CharInfoBuffer,
-                new NativeMethods.Coord()
+            return Native.WriteConsoleOutputW(sFileHandle, CharInfoBuffer,
+                new Native.Coord()
                 {
                     X = (short)cWin.width,
                     Y = (short)cWin.height
                 },
-                new NativeMethods.Coord()
+                new Native.Coord()
                 {
                     X = 0,
                     Y = 0
@@ -72,14 +72,14 @@ namespace Console3D
                 return Marshal.GetLastWin32Error();
             }
 
-            var cfi = new NativeMethods.CONSOLE_FONT_INFO_EX();
+            var cfi = new Native.CONSOLE_FONT_INFO_EX();
             cfi.cbSize = (uint)Marshal.SizeOf(cfi);
             cfi.nFont = 0;
             cfi.dwFontSize.X = sizeX;
             cfi.dwFontSize.Y = sizeY;
             cfi.FaceName = (sizeX < 4 || sizeY < 4) ? "Consolas" : "Terminal";
 
-            NativeMethods.SetCurrentConsoleFontEx(handle, false, ref cfi);
+            Native.SetCurrentConsoleFontEx(handle, false, ref cfi);
             return 0;
         }
 

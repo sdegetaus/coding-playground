@@ -15,7 +15,8 @@ namespace Console3D
         private static int HEIGHT = 256;
 
         private static Stopwatch runtimeWatch;
-        private static Stopwatch loopWatch;
+
+        // private static Stopwatch loopWatch;
 
         private static Console3D c3D;
         private static ConsoleWindow cWin;
@@ -28,7 +29,6 @@ namespace Console3D
                 cWin = new ConsoleWindow(WIDTH, HEIGHT);
                 c3D = new Console3D(cWin);
                 Debug.Log("Start");
-
                 Run();
                 runtimeWatch.Stop();
             }

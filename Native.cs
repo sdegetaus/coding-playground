@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Console3D
 {
-    public class NativeMethods
+    public class Native
     {
 
         [DllImport("user32.dll", SetLastError = true)]
