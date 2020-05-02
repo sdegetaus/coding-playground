@@ -13,16 +13,20 @@ namespace Console3D
     {
         private static int WIDTH = 256;
         private static int HEIGHT = 256;
-        private static Console3D c3D;
 
         private static Stopwatch runtimeWatch;
         private static Stopwatch loopWatch;
+
+        private static Console3D c3D;
+        private static ConsoleWindow cWin;
+
 
         static void Main(string[] args)
         {
             try
             {
-                c3D = new Console3D(WIDTH, HEIGHT);
+                cWin = new ConsoleWindow(WIDTH, HEIGHT);
+                c3D = new Console3D(cWin);
                 Debug.Log("Start");
 
                 Run();
@@ -41,12 +45,15 @@ namespace Console3D
 
         static void Run()
         {
+            int loops = 0;
             runtimeWatch = new Stopwatch();
             runtimeWatch.Start();
 
             Mesh cubeMesh = Mesh.Cube;
             float zoom = 4.0f;
             // cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\spaceship.obj");
+
+            #region Current Projection
 
             Matrix4x4 projMatrix = Matrix4x4.zero;
             Matrix4x4 rotationMatZ = Matrix4x4.zero;
@@ -67,20 +74,16 @@ namespace Console3D
             projMatrix[2, 3] = 1.0f;
             projMatrix[3, 3] = 0.0f;
 
-            // float elapsedTime = 1.0f;
             float theta = 0.0f;
 
-            int loops = 0;
+            #endregion
 
             while (true)
             {
-                loopWatch = new Stopwatch();
-                loopWatch.Start();
+                // loopWatch = new Stopwatch();
+                // loopWatch.Start();
 
-                // elapsedTime += 0.05f;
-                // theta = 1f * elapsedTime;
-
-                theta = 2f * (float)runtimeWatch.Elapsed.TotalSeconds;
+                theta = 2.0f * (float)runtimeWatch.Elapsed.TotalSeconds;
 
                 // if (Input.GetKey(ConsoleKey.A))
                 // {
@@ -222,16 +225,20 @@ namespace Console3D
                 }
 
                 if (loops % 2 == 0)
+                {
                     c3D.ClearBuffer();
+                }
                 else
+                {
                     c3D.Blit();
+                }
 
                 loops++;
-                loopWatch.Stop();
+                // loopWatch.Stop();
 
-                if (loops % 5 == 0)
+                if (loops % 10 == 0)
                 {
-                    c3D.UpdateTitle((float)(loops / runtimeWatch.Elapsed.TotalSeconds));
+                    cWin.UpdateTitle((float)(loops / runtimeWatch.Elapsed.TotalSeconds));
                 }
 
             }

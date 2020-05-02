@@ -11,27 +11,12 @@ namespace Console3D
         private readonly IntPtr stdInputHandle = NativeMethods.GetStdHandle(-10);
         private NativeMethods.CharInfo[] CharInfoBuffer { get; set; }
         private SafeFileHandle sFileHandle { get; set; }
+        private ConsoleColor backgroundColor { get; set; }
+        private ConsoleWindow cWin;
 
-        public int width { get; private set; }
-
-        public int height { get; private set; }
-
-        private string windowBaseTitle { get; set; }
-
-        public ConsoleColor backgroundColor { get; private set; }
-
-        public Console3D(int width, int height)
+        public Console3D(ConsoleWindow window)
         {
-            this.width = width;
-            this.height = height;
-
-            windowBaseTitle = "Default Window";
-            Console.CursorVisible = false;
-
-            Console.SetWindowPosition(0, 0);
-            Console.SetWindowSize(width, height);
-
-            Console.SetBufferSize(width, height);
+            this.cWin = window;
 
             backgroundColor = ConsoleColor.DarkRed;
 
@@ -43,7 +28,7 @@ namespace Console3D
 
             if (!sFileHandle.IsInvalid)
             {
-                CharInfoBuffer = new NativeMethods.CharInfo[this.width * this.height];
+                CharInfoBuffer = new NativeMethods.CharInfo[window.width * window.height];
             }
 
             NativeMethods.SetConsoleMode(stdInputHandle, 0x0080);
@@ -52,14 +37,9 @@ namespace Console3D
             // DrawTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Full);
         }
 
-        public void UpdateTitle(float fps)
-        {
-            Console.Title = $"{windowBaseTitle} ({fps})";
-        }
-
         public void ClearBuffer()
         {
-            CharInfoBuffer = new NativeMethods.CharInfo[width * height];
+            CharInfoBuffer = new NativeMethods.CharInfo[cWin.width * cWin.height];
         }
 
         public bool Blit()
@@ -68,15 +48,15 @@ namespace Console3D
             {
                 Left = 0,
                 Top = 0,
-                Right = (short)width,
-                Bottom = (short)height
+                Right = (short)cWin.width,
+                Bottom = (short)cWin.height
             };
 
             return NativeMethods.WriteConsoleOutputW(sFileHandle, CharInfoBuffer,
                 new NativeMethods.Coord()
                 {
-                    X = (short)width,
-                    Y = (short)height
+                    X = (short)cWin.width,
+                    Y = (short)cWin.height
                 },
                 new NativeMethods.Coord()
                 {
@@ -106,9 +86,9 @@ namespace Console3D
         public void SetPixel(Vector2 p, ConsoleColor cColor, ConsoleChar cChar)
         {
             // check boundaries
-            if (p.x >= width || p.y >= height || p.x < 0 || p.y < 0) return;
+            if (p.x >= cWin.width || p.y >= cWin.height || p.x < 0 || p.y < 0) return;
 
-            int i = p.y * width + p.x;
+            int i = p.y * cWin.width + p.x;
             CharInfoBuffer[i].Attributes = (short)((int)cColor | ((int)backgroundColor << 4));
             CharInfoBuffer[i].UnicodeChar = (char)cChar;
         }
@@ -173,16 +153,16 @@ namespace Console3D
 
             float area = 0.5f * (-y1 * x2 + y0 * (-x1 + x2) + x0 * (y1 - y2) + x1 * y2);
 
-            for (int _y = 0; _y < height; _y++)
+            for (int _y = 0; _y < cWin.height; _y++)
             {
-                for (int _x = 0; _x < width; _x++)
+                for (int _x = 0; _x < cWin.width; _x++)
                 {
                     Vector2 pos = new Vector2(_x, _y);
 
                     if (pos.x < 0 ||
                         pos.y < 0 ||
-                        pos.x >= width ||
-                        pos.y >= width)
+                        pos.x >= cWin.width ||
+                        pos.y >= cWin.height)
                     {
                         continue;
                     }
