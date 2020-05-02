@@ -16,8 +16,8 @@ namespace Console3D
         [DllImport("user32.dll", SetLastError = true)]
         public static extern short GetAsyncKeyState(Int32 vKey);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern short GetKeyState(Int32 vKey);
+        // [DllImport("user32.dll", SetLastError = true)]
+        // public static extern short GetKeyState(Int32 vKey);
 
         // [DllImport("kernel32.dll", SetLastError = true)]
         // public static extern short ReadConsoleInput(
@@ -26,7 +26,6 @@ namespace Console3D
         // // int nLength,
         // // int lpNumberOfEventsRead
         // );
-
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetCursorPos(out POINT vKey);

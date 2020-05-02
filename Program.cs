@@ -43,8 +43,6 @@ namespace Console3D
 
         static void Run()
         {
-
-
             int loops = 0;
             runtimeWatch = new Stopwatch();
             runtimeWatch.Start();
@@ -82,30 +80,43 @@ namespace Console3D
 
             #endregion
 
-            // bool IsPaused = false;
+            bool IsPaused = false;
 
             while (true)
             {
-
-                if (Input.GetKeyDown(ConsoleKey.D))
+                // TODO: perform correct stepper
+                if (Input.GetKeyDown(ConsoleKey.P))
                 {
-                    Debug.Log("Down");
+                    IsPaused = !IsPaused;
+                    Debug.Log($"IsPaused: {IsPaused}");
+                    continue;
                 }
 
-                if (Input.GetKey(ConsoleKey.A))
+                if (Input.GetKeyDown(ConsoleKey.RightArrow))
                 {
-                    Debug.Log("aaa");
+                    if (IsPaused)
+                    {
+                        loops++;
+                        runtimeWatch.Elapsed.Add(new TimeSpan(1));
+                        Debug.Log($"Step {runtimeWatch.ElapsedTicks}");
+                        goto Step;
+                    }
                 }
 
-                // if (Input.GetKeyUp(ConsoleKey.U))
-                // {
-                //     Debug.Log("Up");
-                // }
-
-                if (Input.DebugKeys(ConsoleKey.Spacebar))
+                if (IsPaused)
                 {
-                    Debug.Log($"P");
+                    // runtimeWatch.Stop();
+                    continue;
                 }
+                else
+                {
+                    if (!runtimeWatch.IsRunning)
+                    {
+                        runtimeWatch.Start();
+                    }
+                }
+
+            Step:
 
                 // udpate theta (used for rotation)
                 theta = 2.0f * (float)runtimeWatch.Elapsed.TotalSeconds;
