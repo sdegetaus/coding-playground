@@ -2,7 +2,6 @@
 
 // TASKS:
 // Console Window
-// Translate BitArray
 // FPS
 // Loop
 // Loop Events
@@ -12,11 +11,6 @@ namespace Console3D
     public class Program
     {
 
-        static Mesh cubeMesh;
-        static Matrix4x4 projMatrix = Matrix4x4.zero;
-        static Matrix4x4 rotationMatZ = Matrix4x4.zero;
-        static Matrix4x4 rotationMatX = Matrix4x4.zero;
-        static Vector3 vCamera = Vector3.zero;
         static int WIDTH = 256;
         static int HEIGHT = 256;
 
@@ -43,8 +37,13 @@ namespace Console3D
 
         static void Run()
         {
-            cubeMesh = Mesh.Cube;
+            Mesh cubeMesh = Mesh.Cube;
             // cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\spaceship.obj");
+
+            Matrix4x4 projMatrix = Matrix4x4.zero;
+            Matrix4x4 rotationMatZ = Matrix4x4.zero;
+            Matrix4x4 rotationMatX = Matrix4x4.zero;
+            Vector3 vCamera = Vector3.zero;
 
             // Projection Matrix
             float near = 0.1f;
@@ -60,15 +59,15 @@ namespace Console3D
             projMatrix[2, 3] = 1.0f;
             projMatrix[3, 3] = 0.0f;
 
-            float ElapsedTime = 1.0f;
+            float elapsedTime = 1.0f;
             float theta = 0.0f;
 
             while (true)
             {
-                window.ClearBuffer();
+                window.Clear();
 
-                ElapsedTime += 0.05f;
-                theta = 1f * ElapsedTime;
+                elapsedTime += 0.05f;
+                theta = 1f * elapsedTime;
 
                 // var keyInfo = System.Console.ReadKey();
                 // switch (keyInfo.Key)
@@ -118,9 +117,9 @@ namespace Console3D
                     triRotatedZX.p2 = MultiplyMatrixVector(rotatedTriZ.p2, rotationMatX);
 
                     triTranslated = triRotatedZX;
-                    triTranslated.p0.Select(z: triRotatedZX.p0.z + 3.0f);
-                    triTranslated.p1.Select(z: triRotatedZX.p1.z + 3.0f);
-                    triTranslated.p2.Select(z: triRotatedZX.p2.z + 3.0f);
+                    triTranslated.p0.Select(z: triRotatedZX.p0.z + 4.0f);
+                    triTranslated.p1.Select(z: triRotatedZX.p1.z + 4.0f);
+                    triTranslated.p2.Select(z: triRotatedZX.p2.z + 4.0f);
 
                     Vector3 normal = Vector3.zero;
                     Vector3 line1 = Vector3.zero;
@@ -177,11 +176,12 @@ namespace Console3D
                         triProjected.p1.Select(y: triProjected.p1.y * 0.5f * (float)(HEIGHT));
                         triProjected.p2.Select(y: triProjected.p2.y * 0.5f * (float)(HEIGHT));
 
-                        // bitmap.FillTriangle(
-                        //     (int)triProjected.p0.x, (int)triProjected.p0.y,
-                        //     (int)triProjected.p1.x, (int)triProjected.p1.y,
-                        //     (int)triProjected.p2.x, (int)triProjected.p2.y,
-                        //     Color.white * dp
+                        // window.FillTriangle(
+                        //     triProjected.p0,
+                        //     triProjected.p1,
+                        //     triProjected.p2,
+                        //     ConsoleColor.White, // x dp
+                        //     ConsoleChar.Full
                         // );
 
                         window.DrawTriangle(
@@ -189,12 +189,12 @@ namespace Console3D
                             triProjected.p1,
                             triProjected.p2,
                             ConsoleColor.White,
-                            CharType.Full
+                            ConsoleChar.Full
                         );
                     }
                 }
 
-                window.DisplayBuffer();
+                window.Display();
             }
         }
 

@@ -1,4 +1,3 @@
-
 using System;
 using System.IO;
 using Microsoft.Win32.SafeHandles;
@@ -180,9 +179,6 @@ namespace Console3D
             public string FaceName;
         }
 
-
-
         #endregion
-
     }
 }
