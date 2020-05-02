@@ -85,12 +85,12 @@ namespace Console3D
             return $"[{time}] {prefix}{message?.ToString()}";
         }
 
-        private static void Write(string content)
+        private static async void Write(string content)
         {
             if (HasInitialized == false) Initialize();
             using (OutputWriter = new StreamWriter(OutputFilename, true))
             {
-                OutputWriter.WriteLine(content);
+                await OutputWriter.WriteLineAsync(content);
             }
         }
 
