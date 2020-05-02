@@ -7,6 +7,7 @@ namespace Console3D
 {
     public class NativeMethods
     {
+
         [DllImport("user32.dll", SetLastError = true)]
         public static extern short GetAsyncKeyState(Int32 vKey);
 
@@ -45,11 +46,11 @@ namespace Console3D
             Coord dwBufferCoord,
         ref SmallRect lpWriteRegion);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetConsoleScreenBufferInfoEx(
-            IntPtr hConsoleOutput,
-            ref CONSOLE_SCREEN_BUFFER_INFO_EX csbe
-        );
+        // [DllImport("kernel32.dll", SetLastError = true)]
+        // public static extern bool GetConsoleScreenBufferInfoEx(
+        //     IntPtr hConsoleOutput,
+        //     ref CONSOLE_SCREEN_BUFFER_INFO_EX csbe
+        // );
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern Int32 SetCurrentConsoleFontEx(
@@ -60,6 +61,9 @@ namespace Console3D
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern Int32 GetTickCount();
 
         #region Structures
 

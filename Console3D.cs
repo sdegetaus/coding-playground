@@ -11,18 +11,12 @@ namespace Console3D
         private readonly IntPtr stdInputHandle = NativeMethods.GetStdHandle(-10);
         private NativeMethods.CharInfo[] CharInfoBuffer { get; set; }
         private SafeFileHandle sFileHandle { get; set; }
-        private char[,] charBuffer;
-        private int[,] colorBuffer;
 
         public int width { get; private set; }
 
         public int height { get; private set; }
 
-        public string title
-        {
-            get => Console.Title;
-            set => Console.Title = value;
-        }
+        private string windowBaseTitle { get; set; }
 
         public ConsoleColor backgroundColor { get; private set; }
 
@@ -31,16 +25,13 @@ namespace Console3D
             this.width = width;
             this.height = height;
 
-            Console.Title = "Default Window";
+            windowBaseTitle = "Default Window";
             Console.CursorVisible = false;
 
             Console.SetWindowPosition(0, 0);
             Console.SetWindowSize(width, height);
 
             Console.SetBufferSize(width, height);
-
-            charBuffer = new char[width, height];
-            colorBuffer = new int[width, height];
 
             backgroundColor = ConsoleColor.DarkRed;
 
@@ -59,6 +50,11 @@ namespace Console3D
 
             // FillTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Light);
             // DrawTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Full);
+        }
+
+        public void UpdateTitle(float fps)
+        {
+            Console.Title = $"{windowBaseTitle} ({fps})";
         }
 
         public void ClearBuffer()
@@ -165,29 +161,64 @@ namespace Console3D
         }
 
         public void FillTriangle(
-            Vector2 a, Vector2 b, Vector2 c, ConsoleColor cColor, ConsoleChar cChar)
+            Vector2 p0, Vector2 p1, Vector2 p2, ConsoleColor cColor, ConsoleChar cChar)
         {
-            Vector2 min = new Vector2(System.Math.Min(System.Math.Min(a.x, b.x), c.x), System.Math.Min(System.Math.Min(a.y, b.y), c.y));
-            Vector2 max = new Vector2(System.Math.Max(System.Math.Max(a.x, b.x), c.x), System.Math.Max(System.Math.Max(a.y, b.y), c.y));
+            // todo: improve
+            int x0 = p0.x;
+            int y0 = p0.y;
+            int x1 = p1.x;
+            int y1 = p1.y;
+            int x2 = p2.x;
+            int y2 = p2.y;
 
-            var p = new Vector2();
-            for (p.y = min.y; p.y < max.y; p.y++)
+            float area = 0.5f * (-y1 * x2 + y0 * (-x1 + x2) + x0 * (y1 - y2) + x1 * y2);
+
+            for (int _y = 0; _y < height; _y++)
             {
-                for (p.x = min.x; p.x < max.x; p.x++)
+                for (int _x = 0; _x < width; _x++)
                 {
-                    int w0 = (int)Orient(b, c, p);
-                    int w1 = (int)Orient(c, a, p);
-                    int w2 = (int)Orient(a, b, p);
+                    Vector2 pos = new Vector2(_x, _y);
 
-                    if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+                    if (pos.x < 0 ||
+                        pos.y < 0 ||
+                        pos.x >= width ||
+                        pos.y >= width)
                     {
-                        SetPixel(p, cColor, cChar);
+                        continue;
                     }
+
+                    float s = 1f / (2f * area) * (y0 * x2 - x0 * y2 + (y2 - y0) * pos.x + (x0 - x2) * pos.y);
+                    float t = 1f / (2f * area) * (x0 * y1 - y0 * x1 + (y0 - y1) * pos.x + (x1 - x0) * pos.y);
+
+                    if (s > 0f && t > 0f && 1f - s - t > 0f)
+                    {
+                        SetPixel(pos, cColor, cChar);
+                    }
+                    else { continue; }
                 }
             }
+
+            // Vector2 min = new Vector2(System.Math.Min(System.Math.Min(a.x, b.x), c.x), System.Math.Min(System.Math.Min(a.y, b.y), c.y));
+            // Vector2 max = new Vector2(System.Math.Max(System.Math.Max(a.x, b.x), c.x), System.Math.Max(System.Math.Max(a.y, b.y), c.y));
+
+            // var p = Vector2.zero;
+            // for (p.y = min.y; p.y < max.y; p.y++)
+            // {
+            //     for (p.x = min.x; p.x < max.x; p.x++)
+            //     {
+            //         int w0 = Orient(b, c, p);
+            //         int w1 = Orient(c, a, p);
+            //         int w2 = Orient(a, b, p);
+
+            //         if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+            //         {
+            //             SetPixel(p, cColor, cChar);
+            //         }
+            //     }
+            // }
         }
 
-        private float Orient(Vector2 a, Vector2 b, Vector2 c)
+        private int Orient(Vector2 a, Vector2 b, Vector2 c)
         {
             return ((b.x - a.x) * (c.y - a.y)) - ((b.y - a.y) * (c.x - a.x));
         }

@@ -15,13 +15,18 @@ namespace Console3D
         private static int HEIGHT = 256;
         private static Console3D c3D;
 
+        private static Stopwatch runtimeWatch;
+        private static Stopwatch loopWatch;
+
         static void Main(string[] args)
         {
             try
             {
                 c3D = new Console3D(WIDTH, HEIGHT);
                 Debug.Log("Start");
+
                 Run();
+                runtimeWatch.Stop();
             }
             catch (System.Exception e)
             {
@@ -36,6 +41,9 @@ namespace Console3D
 
         static void Run()
         {
+            runtimeWatch = new Stopwatch();
+            runtimeWatch.Start();
+
             Mesh cubeMesh = Mesh.Cube;
             float zoom = 4.0f;
             // cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\spaceship.obj");
@@ -59,18 +67,20 @@ namespace Console3D
             projMatrix[2, 3] = 1.0f;
             projMatrix[3, 3] = 0.0f;
 
-            float elapsedTime = 1.0f;
+            // float elapsedTime = 1.0f;
             float theta = 0.0f;
 
             int loops = 0;
 
             while (true)
             {
-                var s = new Stopwatch();
-                s.Start();
+                loopWatch = new Stopwatch();
+                loopWatch.Start();
 
-                elapsedTime += 0.05f;
-                theta = 1f * elapsedTime;
+                // elapsedTime += 0.05f;
+                // theta = 1f * elapsedTime;
+
+                theta = 2f * (float)runtimeWatch.Elapsed.TotalSeconds;
 
                 // if (Input.GetKey(ConsoleKey.A))
                 // {
@@ -189,40 +199,41 @@ namespace Console3D
                         triProjected.p1.Select(y: triProjected.p1.y * 0.5f * (float)(HEIGHT));
                         triProjected.p2.Select(y: triProjected.p2.y * 0.5f * (float)(HEIGHT));
 
-                        c3D.FillTriangle(
-                            triProjected.p0,
-                            triProjected.p1,
-                            triProjected.p2,
-                            ConsoleColor.Red, // x dp
-                            ConsoleChar.Full
-                        );
+                        if (loops % 2 != 0)
+                        {
+                            c3D.FillTriangle(
+                                triProjected.p0,
+                                triProjected.p1,
+                                triProjected.p2,
+                                ConsoleColor.Red, // x dp
+                                ConsoleChar.Full
+                            );
 
-                        c3D.DrawTriangle(
-                            triProjected.p0,
-                            triProjected.p1,
-                            triProjected.p2,
-                            ConsoleColor.White,
-                            ConsoleChar.Full
-                        );
+                            c3D.DrawTriangle(
+                                triProjected.p0,
+                                triProjected.p1,
+                                triProjected.p2,
+                                ConsoleColor.White,
+                                ConsoleChar.Full
+                            );
+                        }
+
                     }
                 }
 
-                // "selective render"
-                // not tested
                 if (loops % 2 == 0)
-                {
                     c3D.ClearBuffer();
-                }
                 else
-                {
                     c3D.Blit();
-                }
-
 
                 loops++;
+                loopWatch.Stop();
 
-                s.Stop();
-                Debug.Log($"Frame took: {s.Elapsed} | Loops: {loops}");
+                if (loops % 5 == 0)
+                {
+                    c3D.UpdateTitle((float)(loops / runtimeWatch.Elapsed.TotalSeconds));
+                }
+
             }
         }
 

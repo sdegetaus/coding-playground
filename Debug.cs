@@ -47,24 +47,24 @@ namespace Console3D
 
         public static void Log(object message)
         {
-            Write(FormatLog(message, LogType.Info));
+            Write(message?.ToString());
         }
 
         public static void LogWarning(object message)
         {
-            Write(FormatLog(message, LogType.Warning));
+            Write(FormatLog(message?.ToString(), LogType.Warning));
         }
 
         public static void LogError(object message)
         {
-            Write(FormatLog(message, LogType.Error));
+            Write(FormatLog(message?.ToString(), LogType.Error));
         }
 
         #endregion
 
         #region Private Methods
 
-        private static string FormatLog(object message, LogType logType)
+        private static string FormatLog(string message, LogType logType)
         {
             var time = DateTime.Now.ToString("h:mm:ss tt");
             string prefix = null;
@@ -82,15 +82,18 @@ namespace Console3D
                     break;
             }
 
-            return $"[{time}] {prefix}{message?.ToString()}";
+            return $"[{time}] {prefix}{message}";
         }
 
-        private static async void Write(string content)
+        private static async void Write(string message)
         {
             if (HasInitialized == false) Initialize();
+
+            var time = DateTime.Now.ToString("h:mm:ss tt");
+
             using (OutputWriter = new StreamWriter(OutputFilename, true))
             {
-                await OutputWriter.WriteLineAsync(content);
+                await OutputWriter.WriteLineAsync($"[{time}] {message}");
             }
         }
 
