@@ -2,15 +2,9 @@ namespace Console3D
 {
     public struct Vector2
     {
-        public float x;
+        public int x;
 
-        public float y;
-
-        public Vector2(float x, float y)
-        {
-            this.x = x;
-            this.y = y;
-        }
+        public int y;
 
         public Vector2(int x, int y)
         {
@@ -64,6 +58,6 @@ namespace Console3D
             return new Vector2(x, y);
         }
 
-        public static implicit operator Vector2(Vector3 v3) => new Vector2(v3.x, v3.y);
+        public static implicit operator Vector2(Vector3 v3) => new Vector2((int)v3.x, (int)v3.y);
     }
 }

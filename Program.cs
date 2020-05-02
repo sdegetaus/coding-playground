@@ -62,6 +62,8 @@ namespace Console3D
             float elapsedTime = 1.0f;
             float theta = 0.0f;
 
+            int loops = 0;
+
             while (true)
             {
                 var s = new Stopwatch();
@@ -205,12 +207,22 @@ namespace Console3D
                     }
                 }
 
-                c3D.SetBuffer();
-                c3D.Blit();
-                c3D.Clear();
+                // "selective render"
+                // not tested
+                if (loops % 2 == 0)
+                {
+                    c3D.ClearBuffer();
+                }
+                else
+                {
+                    c3D.Blit();
+                }
+
+
+                loops++;
 
                 s.Stop();
-                Debug.Log($"Frame took: {s.Elapsed}");
+                Debug.Log($"Frame took: {s.Elapsed} | Loops: {loops}");
             }
         }
 

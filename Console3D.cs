@@ -59,26 +59,11 @@ namespace Console3D
 
             // FillTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Light);
             // DrawTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Full);
-            // Update();
         }
 
-        public void Clear()
+        public void ClearBuffer()
         {
-            charBuffer = new char[width, height];
-        }
-
-        public void SetBuffer()
-        {
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    int i = (y * width) + x;
-                    int bg = (charBuffer[x, y] == 0) ? (int)backgroundColor : 0;
-                    CharInfoBuffer[i].Attributes = (short)(colorBuffer[x, y] | ((int)backgroundColor << 4));
-                    CharInfoBuffer[i].UnicodeChar = charBuffer[x, y];
-                }
-            }
+            CharInfoBuffer = new NativeMethods.CharInfo[width * height];
         }
 
         public bool Blit()
@@ -126,8 +111,10 @@ namespace Console3D
         {
             // check boundaries
             if (p.x >= width || p.y >= height || p.x < 0 || p.y < 0) return;
-            charBuffer[(int)p.x, (int)p.y] = (char)cChar;
-            colorBuffer[(int)p.x, (int)p.y] = (int)cColor;
+
+            int i = p.y * width + p.x;
+            CharInfoBuffer[i].Attributes = (short)((int)cColor | ((int)backgroundColor << 4));
+            CharInfoBuffer[i].UnicodeChar = (char)cChar;
         }
 
         public void DrawLine(
@@ -177,7 +164,8 @@ namespace Console3D
             DrawLine(p2, p0, cColor, cChar);
         }
 
-        public void FillTriangle(Vector2 a, Vector2 b, Vector2 c, ConsoleColor cColor, ConsoleChar cChar)
+        public void FillTriangle(
+            Vector2 a, Vector2 b, Vector2 c, ConsoleColor cColor, ConsoleChar cChar)
         {
             Vector2 min = new Vector2(System.Math.Min(System.Math.Min(a.x, b.x), c.x), System.Math.Min(System.Math.Min(a.y, b.y), c.y));
             Vector2 max = new Vector2(System.Math.Max(System.Math.Max(a.x, b.x), c.x), System.Math.Max(System.Math.Max(a.y, b.y), c.y));
