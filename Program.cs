@@ -34,7 +34,7 @@ namespace Console3D
             }
             catch (System.Exception e)
             {
-                Debug.LogError(e);
+                Debug.Log(e);
             }
             finally
             {

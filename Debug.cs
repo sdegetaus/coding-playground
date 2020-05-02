@@ -2,6 +2,10 @@
 
 using System;
 using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Console3D.Collections;
 
 namespace Console3D
 {
@@ -20,7 +24,7 @@ namespace Console3D
 
         private static string OutputFilename;
 
-        private static StreamWriter OutputWriter;
+        private static FileStream OutputStream;
 
         #endregion
 
@@ -45,20 +49,21 @@ namespace Console3D
             HasInitialized = true;
         }
 
+
         public static void Log(object message)
         {
-            Write(message?.ToString());
+            ProcessWrite(message?.ToString());
         }
 
-        public static void LogWarning(object message)
-        {
-            Write(FormatLog(message?.ToString(), LogType.Warning));
-        }
+        // public static void LogWarning(object message)
+        // {
+        //     Write(FormatLog(message?.ToString(), LogType.Warning));
+        // }
 
-        public static void LogError(object message)
-        {
-            Write(FormatLog(message?.ToString(), LogType.Error));
-        }
+        // public static void LogError(object message)
+        // {
+        //     Write(FormatLog(message?.ToString(), LogType.Error));
+        // }
 
         #endregion
 
@@ -85,17 +90,28 @@ namespace Console3D
             return $"[{time}] {prefix}{message}";
         }
 
-        private static async void Write(string message)
+        private static Task ProcessWrite(string message)
+        {
+            return WriteTextAsync(message);
+        }
+
+        private static async Task WriteTextAsync(string message)
         {
             if (HasInitialized == false) Initialize();
 
             var time = DateTime.Now.ToString("h:mm:ss tt");
 
-            using (OutputWriter = new StreamWriter(OutputFilename, true))
+            byte[] encodedText = Encoding.UTF8.GetBytes($"[{time}] {message}" + "\r\n");
+
+            using (OutputStream = new FileStream(
+                OutputFilename, FileMode.Append, FileAccess.Write, FileShare.Read,
+                bufferSize: 8196, useAsync: true))
             {
-                await OutputWriter.WriteLineAsync($"[{time}] {message}");
+                await OutputStream.WriteAsync(encodedText, 0, encodedText.Length);
             }
         }
+
+
 
         #endregion
     }
