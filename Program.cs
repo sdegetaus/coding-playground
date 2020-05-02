@@ -10,17 +10,15 @@ namespace Console3D
 {
     public class Program
     {
-
-        static int WIDTH = 256;
-        static int HEIGHT = 256;
-
-        static ConsoleWindow window;
+        private static int WIDTH = 256;
+        private static int HEIGHT = 256;
+        private static Console3D c3D;
 
         static void Main(string[] args)
         {
             try
             {
-                window = new ConsoleWindow(WIDTH, HEIGHT);
+                c3D = new Console3D(WIDTH, HEIGHT);
                 Debug.Log("Start");
                 Run();
             }
@@ -64,7 +62,7 @@ namespace Console3D
 
             while (true)
             {
-                window.Clear();
+                c3D.Clear();
 
                 elapsedTime += 0.05f;
                 theta = 1f * elapsedTime;
@@ -73,10 +71,10 @@ namespace Console3D
                 // switch (keyInfo.Key)
                 // {
                 //     case System.ConsoleKey.LeftArrow:
-                //         ElapsedTime -= 0.1f;
+                //         elapsedTime -= 0.1f;
                 //         break;
                 //     case System.ConsoleKey.RightArrow:
-                //         ElapsedTime += 0.1f;
+                //         elapsedTime += 0.1f;
                 //         break;
                 //     case System.ConsoleKey.Escape:
                 //         return;
@@ -184,7 +182,7 @@ namespace Console3D
                         //     ConsoleChar.Full
                         // );
 
-                        window.DrawTriangle(
+                        c3D.DrawTriangle(
                             triProjected.p0,
                             triProjected.p1,
                             triProjected.p2,
@@ -194,7 +192,7 @@ namespace Console3D
                     }
                 }
 
-                window.Display();
+                c3D.Update();
             }
         }
 

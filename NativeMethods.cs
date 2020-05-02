@@ -73,11 +73,11 @@ namespace Console3D
         [StructLayout(LayoutKind.Sequential)]
         public struct Coord
         {
-            public short x;
+            public short X;
             public short Y;
             public Coord(short x, short y)
             {
-                this.x = x;
+                this.X = x;
                 this.Y = y;
             }
         };
