@@ -24,6 +24,8 @@ namespace Console3D
             set => Console.Title = value;
         }
 
+        public ConsoleColor backgroundColor { get; private set; }
+
         public Console3D(int width, int height)
         {
             this.width = width;
@@ -40,9 +42,9 @@ namespace Console3D
             charBuffer = new char[width, height];
             colorBuffer = new int[width, height];
 
-            SetFont(stdOutputHandle, 2, 2);
+            backgroundColor = ConsoleColor.DarkRed;
 
-            NativeMethods.SetConsoleMode(stdInputHandle, 0x0080);
+            SetFont(stdOutputHandle, 2, 2);
 
             sFileHandle = NativeMethods.CreateFile(
                "CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero
@@ -53,36 +55,33 @@ namespace Console3D
                 CharInfoBuffer = new NativeMethods.CharInfo[this.width * this.height];
             }
 
-            // DrawTriangle(new Vector2(0, 0), new Vector2(5, 0), new Vector2(0, 5), ConsoleColor.Red, ConsoleChar.Full);
-            Update();
-        }
+            NativeMethods.SetConsoleMode(stdInputHandle, 0x0080);
 
-        public void Update()
-        {
-            DisplayBuffer();
-            Blit();
+            // FillTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Light);
+            // DrawTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Full);
+            // Update();
         }
 
         public void Clear()
         {
-            Array.Clear(charBuffer, 0, charBuffer.Length);
-            Array.Clear(colorBuffer, 0, colorBuffer.Length);
+            charBuffer = new char[width, height];
         }
 
-        private void DisplayBuffer()
+        public void SetBuffer()
         {
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     int i = (y * width) + x;
-                    CharInfoBuffer[i].Attributes = (short)(colorBuffer[x, y] | (0 << 4));
+                    int bg = (charBuffer[x, y] == 0) ? (int)backgroundColor : 0;
+                    CharInfoBuffer[i].Attributes = (short)(colorBuffer[x, y] | ((int)backgroundColor << 4));
                     CharInfoBuffer[i].UnicodeChar = charBuffer[x, y];
                 }
             }
         }
 
-        private bool Blit()
+        public bool Blit()
         {
             var rect = new NativeMethods.SmallRect()
             {
@@ -123,7 +122,7 @@ namespace Console3D
             return 0;
         }
 
-        private void SetPixel(Vector2 p, ConsoleColor cColor, ConsoleChar cChar)
+        public void SetPixel(Vector2 p, ConsoleColor cColor, ConsoleChar cChar)
         {
             // check boundaries
             if (p.x >= width || p.y >= height || p.x < 0 || p.y < 0) return;
@@ -176,6 +175,33 @@ namespace Console3D
             DrawLine(p0, p1, cColor, cChar);
             DrawLine(p1, p2, cColor, cChar);
             DrawLine(p2, p0, cColor, cChar);
+        }
+
+        public void FillTriangle(Vector2 a, Vector2 b, Vector2 c, ConsoleColor cColor, ConsoleChar cChar)
+        {
+            Vector2 min = new Vector2(System.Math.Min(System.Math.Min(a.x, b.x), c.x), System.Math.Min(System.Math.Min(a.y, b.y), c.y));
+            Vector2 max = new Vector2(System.Math.Max(System.Math.Max(a.x, b.x), c.x), System.Math.Max(System.Math.Max(a.y, b.y), c.y));
+
+            var p = new Vector2();
+            for (p.y = min.y; p.y < max.y; p.y++)
+            {
+                for (p.x = min.x; p.x < max.x; p.x++)
+                {
+                    int w0 = (int)Orient(b, c, p);
+                    int w1 = (int)Orient(c, a, p);
+                    int w2 = (int)Orient(a, b, p);
+
+                    if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+                    {
+                        SetPixel(p, cColor, cChar);
+                    }
+                }
+            }
+        }
+
+        private float Orient(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return ((b.x - a.x) * (c.y - a.y)) - ((b.y - a.y) * (c.x - a.x));
         }
 
     }

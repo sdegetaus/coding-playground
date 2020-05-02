@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 // TASKS:
 // Console Window
@@ -36,6 +37,7 @@ namespace Console3D
         static void Run()
         {
             Mesh cubeMesh = Mesh.Cube;
+            float zoom = 4.0f;
             // cubeMesh.LoadFromFile(@"C:\Users\minim\Desktop\image_output\spaceship.obj");
 
             Matrix4x4 projMatrix = Matrix4x4.zero;
@@ -62,10 +64,21 @@ namespace Console3D
 
             while (true)
             {
-                c3D.Clear();
+                var s = new Stopwatch();
+                s.Start();
 
                 elapsedTime += 0.05f;
                 theta = 1f * elapsedTime;
+
+                // if (Input.GetKey(ConsoleKey.A))
+                // {
+                //     Debug.Log("o");
+                // }
+
+                // if (Input.GetKeyDown(ConsoleKey.A))
+                // {
+                //     Debug.Log("hell");
+                // }
 
                 // var keyInfo = System.Console.ReadKey();
                 // switch (keyInfo.Key)
@@ -115,9 +128,9 @@ namespace Console3D
                     triRotatedZX.p2 = MultiplyMatrixVector(rotatedTriZ.p2, rotationMatX);
 
                     triTranslated = triRotatedZX;
-                    triTranslated.p0.Select(z: triRotatedZX.p0.z + 4.0f);
-                    triTranslated.p1.Select(z: triRotatedZX.p1.z + 4.0f);
-                    triTranslated.p2.Select(z: triRotatedZX.p2.z + 4.0f);
+                    triTranslated.p0.Select(z: triRotatedZX.p0.z + zoom);
+                    triTranslated.p1.Select(z: triRotatedZX.p1.z + zoom);
+                    triTranslated.p2.Select(z: triRotatedZX.p2.z + zoom);
 
                     Vector3 normal = Vector3.zero;
                     Vector3 line1 = Vector3.zero;
@@ -174,13 +187,13 @@ namespace Console3D
                         triProjected.p1.Select(y: triProjected.p1.y * 0.5f * (float)(HEIGHT));
                         triProjected.p2.Select(y: triProjected.p2.y * 0.5f * (float)(HEIGHT));
 
-                        // window.FillTriangle(
-                        //     triProjected.p0,
-                        //     triProjected.p1,
-                        //     triProjected.p2,
-                        //     ConsoleColor.White, // x dp
-                        //     ConsoleChar.Full
-                        // );
+                        c3D.FillTriangle(
+                            triProjected.p0,
+                            triProjected.p1,
+                            triProjected.p2,
+                            ConsoleColor.Red, // x dp
+                            ConsoleChar.Full
+                        );
 
                         c3D.DrawTriangle(
                             triProjected.p0,
@@ -192,7 +205,12 @@ namespace Console3D
                     }
                 }
 
-                c3D.Update();
+                c3D.SetBuffer();
+                c3D.Blit();
+                c3D.Clear();
+
+                s.Stop();
+                Debug.Log($"Frame took: {s.Elapsed}");
             }
         }
 
