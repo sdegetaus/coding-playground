@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Console3D
+namespace ConsoleGraphics
 {
     public struct Color
     {

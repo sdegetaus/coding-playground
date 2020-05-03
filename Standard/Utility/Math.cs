@@ -1,4 +1,4 @@
-namespace Console3D
+namespace ConsoleGraphics
 {
     public static class Math
     {

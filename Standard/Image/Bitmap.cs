@@ -1,7 +1,7 @@
 using System.Text;
-using Console3D.Collections;
+using ConsoleGraphics.Collections;
 
-namespace Console3D
+namespace ConsoleGraphics
 {
     public class Bitmap : Image
     {

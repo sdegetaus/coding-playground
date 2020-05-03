@@ -6,7 +6,7 @@ using System.IO;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 
-namespace Console3D
+namespace ConsoleGraphics
 {
     internal class Native
     {

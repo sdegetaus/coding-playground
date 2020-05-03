@@ -1,4 +1,4 @@
-namespace Console3D
+namespace ConsoleGraphics
 {
     public abstract class Node<T>
     {

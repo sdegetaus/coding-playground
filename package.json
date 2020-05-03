@@ -1,7 +1,7 @@
 {
-  "name": "console-3d",
+  "name": "console-graphics",
   "version": "0.0.1",
-  "description": "Simple 3D Engine in C#",
+  "description": "Console Graphics Engine in C#",
   "scripts": {
     "start": "start cmd /k dotnet run"
   },

@@ -1,6 +1,6 @@
 using System;
 
-namespace Console3D
+namespace ConsoleGraphics
 {
     public struct CColor
     {

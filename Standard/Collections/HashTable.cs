@@ -1,4 +1,4 @@
-namespace Console3D.Collections
+namespace ConsoleGraphics.Collections
 {
     public class HashTable<TKey, TValue> : Collection<LinkedList<KeyValuePair<TKey, TValue>>>
     {

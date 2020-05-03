@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Console3D
+namespace ConsoleGraphics
 {
     public static class Debug
     {

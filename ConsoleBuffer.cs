@@ -3,20 +3,22 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace Console3D
+namespace ConsoleGraphics
 {
-    public class Console3D
+    public class ConsoleBuffer
     {
         private Native.CHAR_INFO[] CharInfoBuffer { get; set; }
         private SafeFileHandle sFileHandle { get; set; }
-        private ConsoleColor backgroundColor { get; set; }
-        private ConsoleWindow cWin;
+        private ConsoleWindow consoleWindow;
+        private int width;
+        private int height;
 
-        public Console3D(ConsoleWindow window)
+        public ConsoleBuffer(int width, int height)
         {
-            this.cWin = window;
+            this.width = width;
+            this.height = height;
 
-            backgroundColor = ConsoleColor.DarkRed;
+            this.consoleWindow = new ConsoleWindow(width, height);
 
             SetFont(Native.stdOutputHandle, 2, 2);
 
@@ -26,23 +28,15 @@ namespace Console3D
 
             if (!sFileHandle.IsInvalid)
             {
-                CharInfoBuffer = new Native.CHAR_INFO[window.width * window.height];
+                CharInfoBuffer = new Native.CHAR_INFO[width * height];
             }
 
             Native.SetConsoleMode(Native.stdInputHandle, 0x0080);
-
-            // FillTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Light);
-            // DrawTriangle(new Vector2(0, 0), new Vector2(25, 0), new Vector2(0, 25), ConsoleColor.Red, ConsoleChar.Full);
-        }
-
-        internal Native.CHAR_INFO[] GetCharInfoBuffer()
-        {
-            return CharInfoBuffer;
         }
 
         public void ClearBuffer()
         {
-            CharInfoBuffer = new Native.CHAR_INFO[cWin.width * cWin.height];
+            CharInfoBuffer = new Native.CHAR_INFO[width * height];
         }
 
         public bool Blit()
@@ -51,21 +45,25 @@ namespace Console3D
             {
                 Left = 0,
                 Top = 0,
-                Right = (short)cWin.width,
-                Bottom = (short)cWin.height
+                Right = (short)width,
+                Bottom = (short)height
             };
 
-            return Native.WriteConsoleOutputW(sFileHandle, CharInfoBuffer,
+            return Native.WriteConsoleOutputW(
+                sFileHandle,
+                CharInfoBuffer,
                 new Native.COORD()
                 {
-                    X = (short)cWin.width,
-                    Y = (short)cWin.height
+                    X = (short)width,
+                    Y = (short)height
                 },
                 new Native.COORD()
                 {
                     X = 0,
                     Y = 0
-                }, ref rect);
+                },
+                ref rect
+            );
         }
 
         internal static int SetFont(IntPtr handle, short sizeX, short sizeY)
@@ -88,9 +86,8 @@ namespace Console3D
 
         public void SetPixel(Vector2 p, Color color)
         {
-            // check boundaries
-            if (p.x >= cWin.width || p.y >= cWin.height || p.x < 0 || p.y < 0) return;
-            int i = p.y * cWin.width + p.x;
+            if (p.x >= width || p.y >= height || p.x < 0 || p.y < 0) return;
+            int i = p.y * width + p.x;
 
             var cColor = color.ToCColor();
 
@@ -159,8 +156,6 @@ namespace Console3D
                     int w0 = Orient(b, c, p);
                     int w1 = Orient(c, a, p);
                     int w2 = Orient(a, b, p);
-
-                    // Debug.Log($"{w0} | {w1} | {w2}");
 
                     if (w0 >= 0 && w1 >= 0 && w2 >= 0)
                     {

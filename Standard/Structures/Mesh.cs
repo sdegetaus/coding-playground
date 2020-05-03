@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using Console3D.Collections;
+using ConsoleGraphics.Collections;
 
-namespace Console3D
+namespace ConsoleGraphics
 {
     public struct Mesh
     {
